@@ -1,11 +1,11 @@
-import { Router, Request, Response } from 'express';
-import middlewares from '../middlewares';
+import { Router } from 'express';
+import me from './user/me';
+
 const route = Router();
 
 export default (app: Router) => {
-  app.use('/users', route);
+  app.use('/user', route);
+  me(app, route);
 
-  route.get('/me', middlewares.isAuth, middlewares.attachCurrentUser, (req: Request, res: Response) => {
-    return res.json({ user: req.currentUser }).status(200);
-  });
+  return app;
 };

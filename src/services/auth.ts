@@ -1,24 +1,31 @@
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import jwt from 'jsonwebtoken';
-import MailerService from './mailer';
 import config from '../config';
 import argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
 import events from '../subscribers/events';
+import jwtDecode from 'jwt-decode';
 
+/**
+ * Removed from constructor
+ * private mailer: MailerService,
+ *
+ *
+ */
 @Service()
 export default class AuthService {
   constructor(
     @Inject('userModel') private userModel: Models.UserModel,
-    private mailer: MailerService,
+
     @Inject('logger') private logger,
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
-  ) {
-  }
+  ) {}
 
-  public async SignUp(userInputDTO: IUserInputDTO): Promise<{ user: IUser; token: string }> {
+  public async SignUp(
+    userInputDTO: IUserInputDTO,
+  ): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
     try {
       const salt = randomBytes(32);
 
@@ -47,13 +54,13 @@ export default class AuthService {
         password: hashedPassword,
       });
       this.logger.silly('Generating JWT');
-      const token = this.generateToken(userRecord);
+      const { accessToken, refreshToken } = this.generateToken(userRecord._id);
 
       if (!userRecord) {
         throw new Error('User cannot be created');
       }
       this.logger.silly('Sending welcome email');
-      await this.mailer.SendWelcomeEmail(userRecord);
+      //await this.mailer.SendWelcomeEmail(userRecord);
 
       this.eventDispatcher.dispatch(events.user.signUp, { user: userRecord });
 
@@ -66,15 +73,18 @@ export default class AuthService {
       const user = userRecord.toObject();
       Reflect.deleteProperty(user, 'password');
       Reflect.deleteProperty(user, 'salt');
-      return { user, token };
+      return { user, accessToken, refreshToken };
     } catch (e) {
       this.logger.error(e);
       throw e;
     }
   }
 
-  public async SignIn(email: string, password: string): Promise<{ user: IUser; token: string }> {
-    const userRecord = await this.userModel.findOne({ email });
+  public async SignIn(
+    email: string,
+    password: string,
+  ): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
+    const userRecord = await this.userModel.findOne({ email }).select('+password');
     if (!userRecord) {
       throw new Error('User not registered');
     }
@@ -82,11 +92,11 @@ export default class AuthService {
      * We use verify from argon2 to prevent 'timing based' attacks
      */
     this.logger.silly('Checking password');
-    const validPassword = await argon2.verify(userRecord.password, password);
+    const validPassword = await userRecord.correctPassword(password, userRecord.password);
     if (validPassword) {
       this.logger.silly('Password is valid!');
       this.logger.silly('Generating JWT');
-      const token = this.generateToken(userRecord);
+      const { accessToken, refreshToken } = this.generateToken(userRecord._id);
 
       const user = userRecord.toObject();
       Reflect.deleteProperty(user, 'password');
@@ -94,16 +104,66 @@ export default class AuthService {
       /**
        * Easy as pie, you don't need passport.js anymore :)
        */
-      return { user, token };
+      return { user, accessToken, refreshToken };
     } else {
       throw new Error('Invalid Password');
     }
   }
 
-  private generateToken(user) {
+  public async GenerateNewToken(
+    oldRefreshToken: string,
+  ): Promise<{ user: IUser; accessToken: string; refreshToken: string }> {
+    /**
+     * We use verify from argon2 to prevent 'timing based' attacks
+     */
+    this.logger.silly('Checking if refresh token exists');
+
+    if (oldRefreshToken) {
+      this.logger.silly('Refresh token  exists');
+      this.logger.silly('Generating new JWT');
+
+      const uid = this.decodeRefreshToken(oldRefreshToken);
+      this.logger.debug('Decoded Refresh Token uid: %s', uid);
+      const userRecord = await this.userModel.findById(uid);
+
+      if (!userRecord) {
+        throw new Error('User not exist');
+      }
+      const user = userRecord.toObject();
+      Reflect.deleteProperty(user, 'password');
+      Reflect.deleteProperty(user, 'salt');
+
+      const { accessToken, refreshToken } = this.generateToken(uid);
+
+      return { user, accessToken, refreshToken };
+    } else {
+      throw new Error('No Refresh Token');
+    }
+  }
+
+  private decodeRefreshToken(oldRefreshToken) {
+    const decoded = jwtDecode<{ _id: string; exp?: number; iat?: number }>(oldRefreshToken);
+    return decoded._id;
+  }
+
+  private generateToken(uid) {
     const today = new Date();
+
+    //15 min
+    const accessTokenExp = new Date(Date.now() + 60 * 1000 * 15);
+
+    //7 day
+    const refreshTokenExp = new Date(Date.now() + 3600 * 1000 * 24 * 7);
+
+    /*
+    accessTokenExp.setMinutes(today.getMinutes() + 15);
+    refreshTokenExp.setMinutes(today.getDay() + 1);
+     */
+    /*
     const exp = new Date(today);
     exp.setDate(today.getDate() + 60);
+
+     */
 
     /**
      * A JWT means JSON Web Token, so basically it's a json that is _hashed_ into a string
@@ -114,15 +174,24 @@ export default class AuthService {
      * because it doesn't have _the secret_ to sign it
      * more information here: https://softwareontheroad.com/you-dont-need-passport
      */
-    this.logger.silly(`Sign JWT for userId: ${user._id}`);
-    return jwt.sign(
+    this.logger.silly(`Sign JWT for userId: ${uid}`);
+
+    const accessToken = jwt.sign(
       {
-        _id: user._id, // We are gonna use this in the middleware 'isAuth'
-        role: user.role,
-        name: user.name,
-        exp: exp.getTime() / 1000,
+        _id: uid, // We are gonna use this in the middleware 'isAuth'
+
+        exp: accessTokenExp.getTime() / 1000,
       },
-      config.jwtSecret
+      config.jwtSecret,
     );
+
+    const refreshToken = jwt.sign(
+      {
+        _id: uid,
+        exp: refreshTokenExp.getTime() / 1000,
+      },
+      config.jwtRefreshSecret,
+    );
+    return { refreshToken, accessToken };
   }
 }
