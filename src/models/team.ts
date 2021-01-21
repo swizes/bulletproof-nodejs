@@ -6,15 +6,25 @@ const Team = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      index: true,
     },
     shortName: {
       type: String,
       required: true,
+      index: true,
     },
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+    },
+    invitationCode: {
+      type: String,
+      default: null,
+      index: true,
+      require: true,
+      unique: true,
+      select: false,
     },
     members: [
       {

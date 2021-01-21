@@ -12,7 +12,6 @@ import config from '../../config';
  */
 
 const getRefreshTokenFromBody = req => {
-  console.log(req.body.oldRefreshToken);
   return req.body.oldRefreshToken ? req.body.oldRefreshToken : null;
 };
 

@@ -6,10 +6,11 @@ export interface ITeam {
   members?: [
     {
       uid: string;
-      mainRole: number;
-      sideRoles: number[];
+      mainRole?: number;
+      sideRoles?: number[];
     },
   ];
+  invitationCode?: string;
 }
 
 export interface ITeamInputDTO {
