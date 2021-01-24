@@ -1,24 +1,24 @@
 import { NextFunction, Request, Response, Router } from 'express';
-
+import middlewares from '../../middlewares';
 import { Container } from 'typedi';
+import UserService from '../../../services/userService';
 import { Logger } from 'winston';
-import middlewares from '../../../middlewares';
-import TeamService from '../../../../services/teamService';
 
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
-
   route.patch(
-    '/:teamId/members/:userId',
+    '/me',
     middlewares.isAuth,
-
+    middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling Update Member endpoint with params: %o', req.params);
-      try {
-        const teamServiceInstance = Container.get(TeamService);
-        const { team } = await teamServiceInstance.UpdateMember(req.params.teamId, req.params.userId, req.body);
+      const userId = req.currentUser._id;
+      logger.debug('Calling Update User endpoint with body: %o', userId);
 
-        return res.json({ data: team }).status(201);
+      try {
+        const userServiceInstance = Container.get(UserService);
+        const { user } = await userServiceInstance.UpdateUser(userId, req.body);
+
+        return res.json({ user }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

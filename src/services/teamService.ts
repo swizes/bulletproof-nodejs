@@ -5,17 +5,10 @@ import { ITeam, ITeamInputDTO, ITeamJoinMemberDTO } from '../interfaces/ITeam';
 import { Logger } from 'winston';
 import Team from '../models/teamModel';
 
-/**
- * Removed from constructor
- * private mailer: MailerService,
- *
- *
- */
 @Service()
 export default class TeamService {
   constructor(
     @Inject('teamModel') private teamModel: Models.TeamModel,
-
     @Inject('logger') private logger: Logger,
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
@@ -38,9 +31,9 @@ export default class TeamService {
     return { team };
   }
 
-  public async UpdateTeam(_id: string, updateDTO: ITeamInputDTO): Promise<{ team: ITeam }> {
+  public async UpdateTeam(teamId: string, updateDTO: ITeamInputDTO): Promise<{ team: ITeam }> {
     this.logger.silly('Updating user');
-    const teamRecord = await this.teamModel.findByIdAndUpdate(_id, { ...updateDTO }, { upsert: true, new: true });
+    const teamRecord = await this.teamModel.findByIdAndUpdate(teamId, { ...updateDTO }, { upsert: true, new: true });
     // @ts-ignore
     const team = teamRecord.toObject();
     if (teamRecord) {
@@ -50,10 +43,10 @@ export default class TeamService {
     }
   }
 
-  public async DeleteTeam(_id: string, owner: string): Promise<{ success: boolean }> {
+  public async DeleteTeam(teamId: string, owner: string): Promise<{ success: boolean }> {
     try {
       this.logger.silly('Deleting Team');
-      await this.teamModel.findOneAndDelete({ _id, owner });
+      await this.teamModel.findOneAndDelete({ teamId, owner });
       return { success: true };
     } catch (e) {
       throw new Error('Could not delete the team');
@@ -72,11 +65,11 @@ export default class TeamService {
     }
   }
 
-  public async RefreshInvitationCode(_id: string, userId: string): Promise<{ invitationCode: string }> {
+  public async RefreshInvitationCode(teamId: string, userId: string): Promise<{ invitationCode: string }> {
     this.logger.silly('Refreshing Invitation Code');
     const teamRecord = await this.teamModel
       .findOneAndUpdate(
-        { _id, 'members.userId': userId },
+        { teamId, 'members.userId': userId },
         {
           invitationCode: await this.generateCode(),
         },
@@ -92,9 +85,9 @@ export default class TeamService {
     }
   }
 
-  public async GetInvitationCode(_id: string): Promise<{ invitationCode: string }> {
+  public async GetInvitationCode(teamId: string): Promise<{ invitationCode: string }> {
     this.logger.silly('Refreshing Invitation Code');
-    const teamRecord = await this.teamModel.findById(_id).select('+invitationCode');
+    const teamRecord = await this.teamModel.findById(teamId).select('+invitationCode');
 
     if (!teamRecord) {
       throw new Error('Could not get new code. You are not owner or team does not exist');
@@ -104,11 +97,11 @@ export default class TeamService {
     }
   }
 
-  public async GetMember(_id: string, uid: string) {
+  public async GetMember(teamId: string, userId: string) {
     this.logger.silly('Getting Member Item');
 
     const teamRecord = await this.teamModel.findOne(
-      { _id, 'members.uid': uid },
+      { teamId, 'members.userId': userId },
       {
         'members.$': 1,
       },
@@ -123,28 +116,26 @@ export default class TeamService {
     }
   }
 
-  public async UpdateMember(_id: string, userId: string, memberObject: any) {
+  public async UpdateMember(teamId: string, userId: string, memberObject: any) {
     this.logger.silly('Update Member Item');
 
-    const teamRecord = await Team.findOne({ _id, 'members.userId': userId }).then(team => {
-      const memberIndex = team.members.map(item => item.userId).indexOf(userId);
-      team.members[memberIndex] = memberObject;
-      team.save();
-      return team;
-    });
-
-    if (!teamRecord) {
-      throw new Error('Could not Update member  item. Either member does not exist or team does not exist ');
-    } else {
-      const team = teamRecord.toObject();
-      return { data: team.members };
-    }
+    return Team.findOne({ teamId, 'members.userId': userId }).then(
+      team => {
+        const memberIndex = team.members.map(item => item.userId).indexOf(userId);
+        team.members[memberIndex] = memberObject;
+        team.save();
+        return { team };
+      },
+      err => {
+        throw new Error('Could not Update member  item. Either member does not exist or team does not exist ');
+      },
+    );
   }
 
-  public async GetAllMembers(_id: string) {
+  public async GetAllMembers(teamId: string) {
     this.logger.silly('Getting All Team Members');
 
-    const teamRecord = await this.teamModel.findById({ _id });
+    const teamRecord = await this.teamModel.findById({ teamId });
 
     if (!teamRecord) {
       throw new Error('Could not get members. Team does not exist ');
@@ -155,8 +146,8 @@ export default class TeamService {
     }
   }
 
-  public async LeaveTeam(_id: string, userId: string): Promise<{ success: boolean }> {
-    await this.teamModel.findByIdAndUpdate(_id, {
+  public async LeaveTeam(teamId: string, userId: string): Promise<{ success: boolean }> {
+    await this.teamModel.findByIdAndUpdate(teamId, {
       $pull: { members: { userId } },
     });
 
@@ -165,7 +156,7 @@ export default class TeamService {
     return { success: true };
   }
 
-  public async JoinTeam(_id: string, teamJoinMemberDTO: ITeamJoinMemberDTO): Promise<{ success: boolean }> {
+  public async JoinTeam(teamId: string, teamJoinMemberDTO: ITeamJoinMemberDTO): Promise<{ team: ITeam }> {
     const {
       userId,
       isPlayer,
@@ -175,26 +166,48 @@ export default class TeamService {
       selectedStyle,
     } = teamJoinMemberDTO;
 
-    await this.teamModel.findByIdAndUpdate(_id, {
-      $addToSet: {
-        members: {
-          userId,
-          mainRole: isPlayer ? 1 : 0,
-          position: isPlayer ? selectedPos.position : null,
-          style: isPlayer ? selectedStyle : null,
+    const teamRecord = await this.teamModel.findByIdAndUpdate(
+      teamId,
+      {
+        $addToSet: {
+          members: {
+            userId,
+            mainRole: isPlayer ? 1 : 0,
+            position: isPlayer ? selectedPos.position : null,
+            style: isPlayer ? selectedStyle : null,
+          },
         },
       },
-    });
+      { new: true, upsert: true },
+    );
 
-    return { success: true };
+    if (!teamRecord) {
+      throw new Error('Could not get members. Team does not exist ');
+    } else {
+      // @ts-ignore
+      const team = teamRecord.toObject();
+
+      return { team };
+    }
   }
 
-  public async RemoveMember(_id: string, userId: string): Promise<{ success: boolean }> {
-    await this.teamModel.findByIdAndUpdate(_id, {
-      $pull: { members: { userId } },
-    });
+  public async RemoveMember(teamId: string, userId: string): Promise<{ team: ITeam }> {
+    const teamRecord = await this.teamModel.findByIdAndUpdate(
+      teamId,
+      {
+        $pull: { members: { userId } },
+      },
+      { new: true, upsert: true },
+    );
     //ToDo:  Remove joined  team notification
-    return { success: true };
+    if (!teamRecord) {
+      throw new Error('Could not get members. Team does not exist ');
+    } else {
+      // @ts-ignore
+      const team = teamRecord.toObject();
+
+      return { team };
+    }
   }
 
   private async generateCode() {

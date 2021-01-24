@@ -7,18 +7,28 @@ import followEndpoints from './routes/followEndpoints';
 import eventEndpoints from './routes/eventEndpoints';
 import eventHappinessEndpoints from './routes/eventHappinessEndpoints';
 import searchEndpoints from './routes/searchEndpoints';
+import homeworkEndpoints from './routes/homeworkEndpoints';
+import notificationEndpoints from './routes/notificationEndpoints';
+import trainingEndpoints from './routes/trainingEndpoints';
+import deviceEndpoints from './routes/deviceEndpoints';
+import eventRatingEndpoints from './routes/eventRatingEndpoints';
 
 // guaranteed to get dependencies
 export default () => {
   const app = Router();
   authEndpoints(app);
-  userEndpoints(app);
-  teamEndpoints(app);
   chatEndpoints(app);
-  followEndpoints(app);
+  deviceEndpoints(app);
   eventEndpoints(app);
   eventHappinessEndpoints(app);
+  eventRatingEndpoints(app);
+  followEndpoints(app);
+  homeworkEndpoints(app);
+  notificationEndpoints(app);
   searchEndpoints(app);
+  teamEndpoints(app);
+  trainingEndpoints(app);
+  userEndpoints(app);
 
   return app;
 };

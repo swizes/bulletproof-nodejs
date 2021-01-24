@@ -2,25 +2,25 @@ import { NextFunction, Request, Response, Router } from 'express';
 import middlewares from '../../middlewares';
 import { Container } from 'typedi';
 import { Logger } from 'winston';
-import EventRatingService from '../../../services/eventRatingService';
+import DeviceService from '../../../services/deviceService';
 
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
-  route.get(
-    '/content/contentId:/users/:userId',
+  route.delete(
+    '/:deviceId/user/:userId',
     middlewares.isAuth,
     async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling GetEventRatingOfUser endpoint');
+      logger.debug('Calling DeleteUserFromDeviceNotificationToken endpoint');
       try {
-        const eventRatingServiceInstance = Container.get(EventRatingService);
+        const deviceServiceInstance = Container.get(DeviceService);
 
-        const { eventRating } = await eventRatingServiceInstance.GetEventRatingOfUser(
+        const { device } = await deviceServiceInstance.DeleteUserFromDeviceNotificationToken(
+          req.params.deviceId,
           req.params.userId,
-          req.params.contentId,
         );
 
-        return res.json({ data: eventRating }).status(200);
+        return res.json({ data: device }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

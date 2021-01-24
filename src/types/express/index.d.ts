@@ -10,6 +10,8 @@ import { ITraining } from '../../interfaces/ITraining';
 import { IMatch } from '../../interfaces/IMatch';
 import { IMessage } from '../../interfaces/IMessage';
 import { IChat } from '../../interfaces/IChat';
+import { INotification } from '../../interfaces/INotification';
+import { IDevice } from '../../interfaces/IDevice';
 declare global {
   namespace Express {
     export interface Request {
@@ -29,5 +31,7 @@ declare global {
     export type MatchModel = Model<IMatch & Document>;
     export type ChatModel = Model<IChat & Document>;
     export type MessageModel = Model<IMessage & Document>;
+    export type NotificationModel = Model<INotification & Document>;
+    export type DeviceModel = Model<IDevice & Document>;
   }
 }

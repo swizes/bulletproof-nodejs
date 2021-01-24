@@ -1,7 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
-import { IFollow } from '../interfaces/IFollow';
 
 /**
  * Removed from constructor
@@ -17,6 +16,19 @@ export default class UserService {
     @Inject('logger') private logger,
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
+
+  public async GetUser(userId: string): Promise<{ user: IUser }> {
+    this.logger.silly('GetUser');
+    const userRecord = await this.userModel.findById(userId);
+
+    // @ts-ignore
+    const user = userRecord.toObject();
+    if (userRecord) {
+      return { user };
+    } else {
+      throw new Error('GetUser failed');
+    }
+  }
 
   public async DeleteUser(userInputDTO: IUserInputDTO): Promise<{ data: string }> {
     if (true) {

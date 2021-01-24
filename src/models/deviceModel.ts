@@ -20,6 +20,11 @@ const Device = new mongoose.Schema(
       type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
       default: [],
     },
+    isMobile: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
   },
   { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } },
 );

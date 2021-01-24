@@ -12,7 +12,7 @@ import postHomework from './homework/postHomework';
 const route = Router();
 
 export default (app: Router) => {
-  app.use('/homework', route);
+  app.use('/homeworks', route);
   getHomeworks(app, route);
   postHomeworkSubmissionFeedback(app, route);
   postHomeworkSubmission(app, route);

@@ -1,24 +1,23 @@
 import { NextFunction, Request, Response, Router } from 'express';
-
+import middlewares from '../../middlewares';
 import { Container } from 'typedi';
+import UserService from '../../../services/userService';
 import { Logger } from 'winston';
-import middlewares from '../../../middlewares';
-import TeamService from '../../../../services/teamService';
 
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
-
   route.get(
-    '/:teamId/members/',
+    '/:userId',
     middlewares.isAuth,
 
     async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling Get All Members endpoint with params: %o', req.params);
-      try {
-        const teamServiceInstance = Container.get(TeamService);
-        const { data } = await teamServiceInstance.GetAllMembers(req.params.teamId);
+      logger.debug('Calling Get User endpoint with body: %o', req.params.userId);
 
-        return res.json({ data }).status(201);
+      try {
+        const userServiceInstance = Container.get(UserService);
+        const { user } = await userServiceInstance.GetUser(req.params.userId);
+
+        return res.json({ data: user }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

@@ -4,7 +4,6 @@ import updateTeam from './team/updateTeam';
 import getTeam from './team/getTeam';
 import deleteTeam from './team/deleteTeam';
 import joinTeam from './team/member/joinTeam';
-import leaveTeam from './team/member/leaveTeam';
 import removeMember from './team/member/removeMember';
 import refreshInvitationCode from './team/refreshInvitationCode';
 import getInvitationCode from './team/getInvitationCode';
@@ -15,13 +14,13 @@ import updateMember from './team/member/updateMember';
 const route = Router();
 
 export default (app: Router) => {
-  app.use('/team', route);
+  app.use('/teams', route);
   createTeam(app, route);
   deleteTeam(app, route);
   updateTeam(app, route);
   getTeam(app, route);
   joinTeam(app, route);
-  leaveTeam(app, route);
+
   removeMember(app, route);
   refreshInvitationCode(app, route);
   getInvitationCode(app, route);

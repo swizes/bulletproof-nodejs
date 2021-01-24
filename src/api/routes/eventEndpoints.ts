@@ -6,7 +6,7 @@ import getUpcomingTeamEvents from './event/getUpcomingTeamEvents';
 const route = Router();
 
 export default (app: Router) => {
-  app.use('/event', route);
+  app.use('/events', route);
   getTeamEvents(app, route);
   getUserEvents(app, route);
   getUpcomingTeamEvents(app, route);

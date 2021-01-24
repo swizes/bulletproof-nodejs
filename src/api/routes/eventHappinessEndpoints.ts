@@ -9,7 +9,7 @@ import postEventHappiness from './eventHappiness/postEventHappiness';
 const route = Router();
 
 export default (app: Router) => {
-  app.use('/eventHappiness', route);
+  app.use('/event-happiness', route);
   getEventHappiness(app, route);
   getAllEventHappiness(app, route);
   getUserHappinessAvg(app, route);

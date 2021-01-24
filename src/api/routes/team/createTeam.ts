@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { Logger } from 'winston';
 import { Container } from 'typedi';
 import middlewares from '../../middlewares';
-import TeamService from '../../../services/team';
+import TeamService from '../../../services/teamService';
 
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');

@@ -1,26 +1,25 @@
 import { NextFunction, Request, Response, Router } from 'express';
-
+import middlewares from '../../middlewares';
 import { Container } from 'typedi';
 import { Logger } from 'winston';
-import middlewares from '../../../middlewares';
-import TeamService from '../../../../services/teamService';
+import NotificationService from '../../../services/notificationService';
 
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
-  route.post(
-    '/:teamId/members/',
+  route.delete(
+    '/:notificationId',
     middlewares.isAuth,
     middlewares.attachCurrentUser,
-
     async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling Join Team endpoint with params: %o', req.params);
+      logger.debug('Calling Delete Notification endpoint');
       try {
-        const teamServiceInstance = Container.get(TeamService);
-        const userId = req.currentUser._id;
-        const { team } = await teamServiceInstance.JoinTeam(req.params.teamId, { userId, ...req.body });
+        const notificationServiceInstance = Container.get(NotificationService);
 
-        return res.json({ data: team }).status(201);
+        const userId = req.currentUser._id;
+        const { notification } = await notificationServiceInstance.DeleteNotification(req.params.notificationId);
+
+        return res.json({ data: notification }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

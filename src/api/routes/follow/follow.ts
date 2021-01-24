@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import middlewares from '../../middlewares';
 import { Container } from 'typedi';
-import UserService from '../../../services/user';
+import UserService from '../../../services/userService';
 import { Logger } from 'winston';
 import FollowService from '../../../services/follow';
 

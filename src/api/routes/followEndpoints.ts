@@ -5,7 +5,7 @@ import unfollowUser from './follow/unfollow';
 const route = Router();
 
 export default (app: Router) => {
-  app.use('/follow', route);
+  app.use('/follows', route);
   followUser(app, route);
   unfollowUser(app, route);
   return app;
