@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
-import { ITeam, ITeamInputDTO } from '../interfaces/ITeam';
+import { ITeam, ITeamInputDTO, ITeamJoinMemberDTO } from '../interfaces/ITeam';
 import { Logger } from 'winston';
-import Team from '../models/team';
+import Team from '../models/teamModel';
 
 /**
  * Removed from constructor
@@ -20,13 +20,13 @@ export default class TeamService {
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
 
-  public async CreateTeam(teamInputDTO: ITeamInputDTO, uid: string): Promise<{ team: ITeam }> {
+  public async CreateTeam(teamInputDTO: ITeamInputDTO, userId: string): Promise<{ team: ITeam }> {
     this.logger.silly('Creating team db record');
 
     const teamRecord = await this.teamModel.create({
       ...teamInputDTO,
-      owner: uid,
-      members: [{ uid, mainRole: 0, sideRoles: [0, 1, 2, 3] }],
+      ownerId: userId,
+      members: [{ userId, mainRole: 2, sideRoles: [0, 1, 2, 3], position: null, style: null }],
       invitationCode: await this.generateCode(),
     });
 
@@ -60,9 +60,9 @@ export default class TeamService {
     }
   }
 
-  public async GetTeam(_id: string): Promise<{ team: ITeam }> {
+  public async GetTeam(query: any): Promise<{ team: ITeam }> {
     this.logger.silly('Getting Team');
-    const teamRecord = await this.teamModel.findById(_id);
+    const teamRecord = await this.teamModel.findOne({ ...query });
     const team = teamRecord.toObject();
 
     if (teamRecord) {
@@ -72,11 +72,11 @@ export default class TeamService {
     }
   }
 
-  public async RefreshInvitationCode(_id: string, owner: string): Promise<{ invitationCode: string }> {
+  public async RefreshInvitationCode(_id: string, userId: string): Promise<{ invitationCode: string }> {
     this.logger.silly('Refreshing Invitation Code');
     const teamRecord = await this.teamModel
       .findOneAndUpdate(
-        { _id, owner },
+        { _id, 'members.userId': userId },
         {
           invitationCode: await this.generateCode(),
         },
@@ -123,11 +123,11 @@ export default class TeamService {
     }
   }
 
-  public async UpdateMember(_id: string, uid: string, memberObject: any) {
+  public async UpdateMember(_id: string, userId: string, memberObject: any) {
     this.logger.silly('Update Member Item');
 
-    const teamRecord = await Team.findOne({ _id, 'members.uid': uid }).then(team => {
-      const memberIndex = team.members.map(item => item.uid).indexOf(uid);
+    const teamRecord = await Team.findOne({ _id, 'members.userId': userId }).then(team => {
+      const memberIndex = team.members.map(item => item.userId).indexOf(userId);
       team.members[memberIndex] = memberObject;
       team.save();
       return team;
@@ -155,9 +155,9 @@ export default class TeamService {
     }
   }
 
-  public async LeaveTeam(_id: string, uid: string): Promise<{ success: boolean }> {
+  public async LeaveTeam(_id: string, userId: string): Promise<{ success: boolean }> {
     await this.teamModel.findByIdAndUpdate(_id, {
-      $pull: { members: { uid } },
+      $pull: { members: { userId } },
     });
 
     //ToDo:  Remove joined  team notification
@@ -165,11 +165,23 @@ export default class TeamService {
     return { success: true };
   }
 
-  public async JoinTeam(_id: string, uid: string): Promise<{ success: boolean }> {
+  public async JoinTeam(_id: string, teamJoinMemberDTO: ITeamJoinMemberDTO): Promise<{ success: boolean }> {
+    const {
+      userId,
+      isPlayer,
+      selectedPos = {
+        position: null,
+      },
+      selectedStyle,
+    } = teamJoinMemberDTO;
+
     await this.teamModel.findByIdAndUpdate(_id, {
       $addToSet: {
         members: {
-          uid,
+          userId,
+          mainRole: isPlayer ? 1 : 0,
+          position: isPlayer ? selectedPos.position : null,
+          style: isPlayer ? selectedStyle : null,
         },
       },
     });
@@ -177,9 +189,9 @@ export default class TeamService {
     return { success: true };
   }
 
-  public async RemoveMember(_id: string, uid: string): Promise<{ success: boolean }> {
+  public async RemoveMember(_id: string, userId: string): Promise<{ success: boolean }> {
     await this.teamModel.findByIdAndUpdate(_id, {
-      $pull: { members: { uid } },
+      $pull: { members: { userId } },
     });
     //ToDo:  Remove joined  team notification
     return { success: true };

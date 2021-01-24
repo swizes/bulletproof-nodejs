@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
+import { IFollow } from '../interfaces/IFollow';
 
 /**
  * Removed from constructor

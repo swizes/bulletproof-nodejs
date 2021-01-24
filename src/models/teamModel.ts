@@ -13,7 +13,7 @@ const Team = new mongoose.Schema(
       required: true,
       index: true,
     },
-    owner: {
+    ownerId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
@@ -29,7 +29,7 @@ const Team = new mongoose.Schema(
     members: [
       {
         _id: false,
-        uid: {
+        userId: {
           type: Schema.Types.ObjectId,
           ref: 'User',
           required: true,
@@ -45,7 +45,6 @@ const Team = new mongoose.Schema(
             1, //player
             2, //parent
             3, //coach
-            4, //player & coach
           ],
           default: 0,
         },
@@ -60,9 +59,17 @@ const Team = new mongoose.Schema(
             ],
           },
         ],
-        child: {
+        childId: {
           type: Schema.Types.ObjectId,
           ref: 'User',
+        },
+        position: {
+          type: String,
+          default: null,
+        },
+        style: {
+          type: String,
+          default: null,
         },
       },
       { _id: false },

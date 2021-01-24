@@ -4,13 +4,18 @@ import { Container } from 'typedi';
 import middlewares from '../../middlewares';
 import TeamService from '../../../services/team';
 
+/**
+ * Used for get by _id or invitationCode
+ *
+ */
+
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
-  route.get('/:id', middlewares.isAuth, async (req: Request, res: Response, next) => {
-    logger.debug('Calling Get Team endpoint with params: %o', req.params);
+  route.get('/', middlewares.isAuth, async (req: Request, res: Response, next) => {
+    logger.debug('Calling Get Team endpoint with query params: %o', req.query);
     try {
       const teamServiceInstance = Container.get(TeamService);
-      const { team } = await teamServiceInstance.GetTeam(req.params.id);
+      const { team } = await teamServiceInstance.GetTeam(req.query);
 
       return res.json({ team }).status(201);
     } catch (e) {

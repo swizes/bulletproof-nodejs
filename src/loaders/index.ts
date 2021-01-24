@@ -21,13 +21,65 @@ export default async ({ expressApp }) => {
   const userModel = {
     name: 'userModel',
     // Notice the require syntax and the '.default'
-    model: require('../models/user').default,
+    model: require('../models/userModel').default,
   };
 
   const teamModel = {
     name: 'teamModel',
     // Notice the require syntax and the '.default'
-    model: require('../models/team').default,
+    model: require('../models/teamModel').default,
+  };
+
+  const followModel = {
+    name: 'followModel',
+    // Notice the require syntax and the '.default'
+    model: require('../models/followModel').default,
+  };
+  const eventModel = {
+    name: 'eventModel',
+    // Notice the require syntax and the '.default'
+    model: require('../models/eventModel').default,
+  };
+
+  const eventHappinessModel = {
+    name: 'eventHappinessModel',
+    // Notice the require syntax and the '.default'
+    model: require('../models/eventHappinessModel').default,
+  };
+
+  const eventRatingModel = {
+    name: 'eventRatingModel',
+    // Notice the require syntax and the '.default'
+    model: require('../models/eventRatingModel').default,
+  };
+
+  const homeworkModel = {
+    name: 'homeworkModel',
+    // Notice the require syntax and the '.default'
+    model: require('../models/homeworkModel').default,
+  };
+
+  const trainingModel = {
+    name: 'trainingModel',
+    // Notice the require syntax and the '.default'
+    model: require('../models/trainingModel').default,
+  };
+
+  const matchModel = {
+    name: 'matchModel',
+    // Notice the require syntax and the '.default'
+    model: require('../models/matchModel').default,
+  };
+
+  const chatModel = {
+    name: 'chatModel',
+    // Notice the require syntax and the '.default'
+    model: require('../models/chatModel').default,
+  };
+  const messageModel = {
+    name: 'messageModel',
+    // Notice the require syntax and the '.default'
+    model: require('../models/messageModel').default,
   };
 
   // It returns the agenda instance because it's needed in the subsequent loaders
@@ -36,6 +88,15 @@ export default async ({ expressApp }) => {
     models: [
       userModel,
       teamModel,
+      followModel,
+      eventModel,
+      eventHappinessModel,
+      eventRatingModel,
+      homeworkModel,
+      trainingModel,
+      matchModel,
+      messageModel,
+      chatModel,
       // salaryModel,
       // whateverModel
     ],

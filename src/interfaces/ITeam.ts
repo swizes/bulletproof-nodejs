@@ -2,19 +2,29 @@ export interface ITeam {
   _id: string;
   name: string;
   shortName: string;
-  owner: string;
+  ownerId: string;
   members?: [
     {
-      uid: string;
+      userId: string;
       mainRole?: number;
       sideRoles?: number[];
+      position: string;
+      style: string;
     },
   ];
   invitationCode?: string;
 }
 
+export interface ITeamJoinMemberDTO {
+  userId: string;
+  isPlayer?: boolean;
+  selectedPos?: {
+    position: string;
+  };
+  selectedStyle?: string;
+}
+
 export interface ITeamInputDTO {
   name: string;
   shortName: string;
-  mainRole: number;
 }

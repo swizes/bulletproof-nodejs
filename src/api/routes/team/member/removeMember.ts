@@ -7,6 +7,7 @@ import middlewares from '../../../middlewares';
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
+  //ToDo: Finish this
   route.get(
     '/:id/member/remove/:removeId',
     middlewares.isAuth,
