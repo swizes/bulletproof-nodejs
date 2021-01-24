@@ -14,7 +14,7 @@ export default (app: Router, route: Router) => {
 
       const { notification } = await notificationServiceInstance.GetNotification(req.params.notificationId.toString());
 
-      return res.json({ data: notification }).status(200);
+      return res.json({ notification }).status(200);
     } catch (e) {
       logger.error('🔥 error: %o', e);
       return next(e);

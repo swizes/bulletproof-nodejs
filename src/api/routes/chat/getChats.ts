@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
         const chatServiceInstance = Container.get(ChatService);
         const currentUserId = req.currentUser._id;
         const { chats } = await chatServiceInstance.GetChats(currentUserId);
-        return res.json({ data: chats }).status(200);
+        return res.json({ chats }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

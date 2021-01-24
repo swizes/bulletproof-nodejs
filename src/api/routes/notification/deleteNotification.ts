@@ -19,7 +19,7 @@ export default (app: Router, route: Router) => {
         const userId = req.currentUser._id;
         const { notification } = await notificationServiceInstance.DeleteNotification(req.params.notificationId);
 
-        return res.json({ data: notification }).status(200);
+        return res.json({ notification }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

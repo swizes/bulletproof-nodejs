@@ -63,4 +63,22 @@ export default class DeviceService {
       throw new Error(logStr + ' failed');
     }
   }
+
+  public async SetDeviceLanguage(deviceId: string, language: string): Promise<{ device: IDevice }> {
+    const logStr = 'SetDeviceLanguage';
+    this.logger.silly(logStr);
+    const deviceRecord = await this.deviceModel.findOneAndUpdate(
+      { deviceId },
+      { language },
+      { upsert: true, new: true },
+    );
+
+    if (deviceRecord) {
+      // @ts-ignore
+      const device = deviceRecord.toObject();
+      return { device };
+    } else {
+      throw new Error(logStr + ' failed');
+    }
+  }
 }

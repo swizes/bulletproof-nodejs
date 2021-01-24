@@ -20,7 +20,7 @@ export default (app: Router, route: Router) => {
 
         const { events = [] } = await eventServiceInstance.GetUserEvents(userId);
 
-        return res.json({ data: events }).status(200);
+        return res.json({ events }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

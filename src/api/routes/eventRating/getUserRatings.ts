@@ -17,7 +17,7 @@ export default (app: Router, route: Router) => {
         const { userId, teamId } = req.params;
         const { eventRatings } = await eventRatingServiceInstance.GetUserRatings(userId.toString(), teamId.toString());
 
-        return res.json({ data: eventRatings }).status(200);
+        return res.json({ eventRatings }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

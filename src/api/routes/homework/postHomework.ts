@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
         const currentUserId = req.currentUser._id;
         const { homework } = await homeworkServiceInstance.PostHomework({ ...req.body }, currentUserId);
 
-        return res.json({ data: homework }).status(200);
+        return res.json({ homework }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

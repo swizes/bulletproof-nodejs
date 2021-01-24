@@ -4,7 +4,7 @@ import getEventHappiness from './eventHappiness/getEventHappiness';
 import getAllEventHappiness from './eventHappiness/getAllEventHappiness';
 import getUserHappinessAvg from './eventHappiness/getUserHappinessAvg';
 import getTeamHappinessAvg from './eventHappiness/getTeamHappinessAvg';
-import postEventHappiness from './eventHappiness/postEventHappiness';
+import postEventHappiness from './eventHappiness/setEventHappiness';
 
 const route = Router();
 

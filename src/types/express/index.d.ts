@@ -12,6 +12,10 @@ import { IMessage } from '../../interfaces/IMessage';
 import { IChat } from '../../interfaces/IChat';
 import { INotification } from '../../interfaces/INotification';
 import { IDevice } from '../../interfaces/IDevice';
+import { IGoal } from '../../interfaces/IGoal';
+import { ISubstitution } from '../../interfaces/ISubstitution';
+import { IBooking } from '../../interfaces/IBooking';
+import { IOtherMatchEvent } from '../../interfaces/IOtherMatchEvent';
 declare global {
   namespace Express {
     export interface Request {
@@ -33,5 +37,9 @@ declare global {
     export type MessageModel = Model<IMessage & Document>;
     export type NotificationModel = Model<INotification & Document>;
     export type DeviceModel = Model<IDevice & Document>;
+    export type GoalModel = Model<IGoal & Document>;
+    export type SubstitutionModel = Model<ISubstitution & Document>;
+    export type BookingModel = Model<IBooking & Document>;
+    export type OtherMatchEventModel = Model<IOtherMatchEvent & Document>;
   }
 }

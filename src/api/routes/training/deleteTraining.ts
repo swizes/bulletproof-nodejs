@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
 
         const { training } = await trainingServiceInstance.DeleteTraining(req.params.trainingId);
 
-        return res.json({ data: training }).status(200);
+        return res.json({ training }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

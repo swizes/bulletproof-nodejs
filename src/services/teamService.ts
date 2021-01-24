@@ -53,13 +53,38 @@ export default class TeamService {
     }
   }
 
-  public async GetTeam(query: any): Promise<{ team: ITeam }> {
+  public async GetTeam(teamId: string): Promise<{ team: ITeam }> {
     this.logger.silly('Getting Team');
-    const teamRecord = await this.teamModel.findOne({ ...query });
+    const teamRecord = await this.teamModel.findById(teamId);
     const team = teamRecord.toObject();
 
     if (teamRecord) {
       return { team };
+    } else {
+      throw new Error('Team does not exist');
+    }
+  }
+
+  public async GetTeamByCode(invitationCode: string): Promise<{ team: ITeam }> {
+    this.logger.silly('Getting Team');
+    const teamRecord = await this.teamModel.findOne({ invitationCode });
+    const team = teamRecord.toObject();
+
+    if (teamRecord) {
+      return { team };
+    } else {
+      throw new Error('Team does not exist');
+    }
+  }
+
+  public async GetTeams(userId: string): Promise<{ teams: ITeam[] }> {
+    this.logger.silly('Getting Team');
+    const teamRecords = await this.teamModel.find({ 'members.userId': userId });
+    // @ts-ignore
+    const teams = teamRecords.toObject();
+
+    if (teamRecords) {
+      return { teams };
     } else {
       throw new Error('Team does not exist');
     }

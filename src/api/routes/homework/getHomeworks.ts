@@ -8,7 +8,7 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.get(
-    '/all',
+    '/',
     middlewares.isAuth,
 
     async (req: Request, res: Response, next: NextFunction) => {
@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
 
         const { homeworks } = await homeworkServiceInstance.GetHomeworks(req.query.teamId.toString());
 
-        return res.json({ data: homeworks }).status(200);
+        return res.json({ homeworks }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

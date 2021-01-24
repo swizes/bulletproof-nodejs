@@ -23,7 +23,7 @@ export default (app: Router, route: Router) => {
           req.body.status,
         );
 
-        return res.json({ data: training }).status(200);
+        return res.json({ training }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

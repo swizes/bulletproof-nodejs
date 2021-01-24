@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
 
         const { trainings } = await trainingServiceInstance.GetTrainings(req.query.teamId.toString());
 
-        return res.json({ data: trainings }).status(200);
+        return res.json({ trainings }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

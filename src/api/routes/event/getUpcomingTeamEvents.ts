@@ -7,7 +7,7 @@ import EventService from '../../../services/eventService';
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
-  route.get('/upcoming/', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
+  route.get('/team/:teamId/upcoming/', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
     logger.debug('Calling GetUpcomingEvents endpoint');
     try {
       const eventServiceInstance = Container.get(EventService);
@@ -16,7 +16,7 @@ export default (app: Router, route: Router) => {
 
       const { events = [] } = await eventServiceInstance.GetUpcomingTeamEvents(teamId);
 
-      return res.json({ data: events }).status(200);
+      return res.json({ events }).status(200);
     } catch (e) {
       logger.error('🔥 error: %o', e);
       return next(e);

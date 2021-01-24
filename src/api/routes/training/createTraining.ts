@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
         const currentUserId = req.currentUser._id;
         const { training } = await trainingServiceInstance.CreateTraining({ ...req.body }, currentUserId);
 
-        return res.json({ data: training }).status(200);
+        return res.json({ training }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

@@ -7,8 +7,8 @@ const route = Router();
 
 export default (app: Router) => {
   app.use('/events', route);
+  getUpcomingTeamEvents(app, route);
   getTeamEvents(app, route);
   getUserEvents(app, route);
-  getUpcomingTeamEvents(app, route);
   return app;
 };

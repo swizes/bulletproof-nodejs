@@ -7,16 +7,14 @@ import EventService from '../../../services/eventService';
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
-  route.get('/team', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
+  route.get('/team/:teamId', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
     logger.debug('Calling GetTeamEvents endpoint');
     try {
       const eventServiceInstance = Container.get(EventService);
 
-      const teamId = req.query.teamId.toString();
+      const { events = [] } = await eventServiceInstance.GetTeamEvents(req.params.teamId);
 
-      const { events = [] } = await eventServiceInstance.GetTeamEvents(teamId);
-
-      return res.json({ data: events }).status(200);
+      return res.json({ events }).status(200);
     } catch (e) {
       logger.error('🔥 error: %o', e);
       return next(e);

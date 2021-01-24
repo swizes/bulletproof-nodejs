@@ -21,7 +21,7 @@ export default (app: Router, route: Router) => {
           req.params.homeworkId.toString(),
         );
 
-        return res.json({ data: homework }).status(200);
+        return res.json({ homework }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

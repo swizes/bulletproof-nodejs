@@ -8,11 +8,11 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.post(
-    '/',
+    '/content/:contentId',
     middlewares.isAuth,
     middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling PostEventHappiness endpoint for content: %o', req.query.contentId.toString());
+      logger.debug('Calling SetEventHappiness endpoint for content: %o', req.params.contentId.toString());
 
       try {
         const eventHappinessServiceInstance = Container.get(EventHappinessService);
@@ -27,7 +27,7 @@ export default (app: Router, route: Router) => {
           mental,
           physical,
         });
-        return res.json({ data: eventHappiness }).status(200);
+        return res.json({ eventHappiness }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

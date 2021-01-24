@@ -20,7 +20,7 @@ export default (app: Router, route: Router) => {
           req.params.contentId,
         );
 
-        return res.json({ data: eventRating }).status(200);
+        return res.json({ eventRating }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

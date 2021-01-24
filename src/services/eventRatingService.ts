@@ -50,6 +50,22 @@ export default class EventRatingService {
     }
   }
 
+  public async GetEventRatings(contentId: string): Promise<{ eventRatings: IEventRating[] }> {
+    const logStr = 'GetEventRatings';
+    this.logger.silly(logStr);
+    const eventRatingRecords = await this.eventRatingModel.find({
+      contentId,
+    });
+
+    if (eventRatingRecords) {
+      // @ts-ignore
+      const eventRatings = eventRatingRecords.toObject();
+      return { eventRatings };
+    } else {
+      throw new Error(logStr + ' failed');
+    }
+  }
+
   public async GetUserRatings(userId: string, teamId: string): Promise<{ eventRatings: IEventRating[] }> {
     const logStr = 'GetUserRatings';
     this.logger.silly(logStr);

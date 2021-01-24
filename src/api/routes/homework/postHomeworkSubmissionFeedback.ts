@@ -8,7 +8,7 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.post(
-    '/:homeworkId/submission/:submissionId',
+    '/:homeworkId/submissions/:submissionId',
     middlewares.isAuth,
     middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +23,7 @@ export default (app: Router, route: Router) => {
           currentUserId,
         );
 
-        return res.json({ data: homework }).status(200);
+        return res.json({ homework }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

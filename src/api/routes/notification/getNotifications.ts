@@ -19,7 +19,7 @@ export default (app: Router, route: Router) => {
         const userId = req.currentUser._id;
         const { notifications } = await notificationServiceInstance.GetNotifications(userId);
 
-        return res.json({ data: notifications }).status(200);
+        return res.json({ notifications }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

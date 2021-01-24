@@ -8,21 +8,19 @@ import FollowService from '../../../services/follow';
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
-  route.get('/:id', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
+  route.get('/:userId', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
     logger.debug('Calling Get All Followers and Followings endpoint');
     try {
       const followServiceInstance = Container.get(FollowService);
 
-      const userId = req.params.id;
+      const userId = req.params.userId;
 
       const { followers, following } = await followServiceInstance.GetFollowersAndFollowings(userId);
 
       return res
         .json({
-          data: {
-            followers,
-            following,
-          },
+          followers,
+          following,
         })
         .status(200);
     } catch (e) {

@@ -1,6 +1,6 @@
 import attachCurrentUser from './attachCurrentUser';
 
-import isRefreshAuth from './isRefreshAuthh';
+import isRefreshAuth from './isRefreshAuth';
 import isAuth from './isAuth';
 
 export default {

@@ -8,11 +8,11 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.post(
-    '/:homeworkId/submission',
+    '/:homeworkId/submissions',
     middlewares.isAuth,
     middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling Post Homework endpoint');
+      logger.debug('Calling Post Homework submission endpoint');
       try {
         const homeworkServiceInstance = Container.get(HomeworkService);
         const currentUserId = req.currentUser._id;
@@ -22,7 +22,7 @@ export default (app: Router, route: Router) => {
           currentUserId,
         );
 
-        return res.json({ data: homework }).status(200);
+        return res.json({ homework }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

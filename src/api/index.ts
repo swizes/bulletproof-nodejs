@@ -12,6 +12,8 @@ import notificationEndpoints from './routes/notificationEndpoints';
 import trainingEndpoints from './routes/trainingEndpoints';
 import deviceEndpoints from './routes/deviceEndpoints';
 import eventRatingEndpoints from './routes/eventRatingEndpoints';
+import matchEndpoints from './routes/matchEndpoints';
+import matchEventEndpoints from './routes/matchEventEndpoints';
 
 // guaranteed to get dependencies
 export default () => {
@@ -24,6 +26,8 @@ export default () => {
   eventRatingEndpoints(app);
   followEndpoints(app);
   homeworkEndpoints(app);
+  matchEndpoints(app);
+  matchEventEndpoints(app);
   notificationEndpoints(app);
   searchEndpoints(app);
   teamEndpoints(app);

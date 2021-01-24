@@ -19,7 +19,7 @@ export default (app: Router, route: Router) => {
         const searchServiceInstance = Container.get(SearchService);
         const { result } = await searchServiceInstance.Search(searchKey.toString(), searchValue.toString(), userId);
 
-        return res.json({ data: result }).status(200);
+        return res.json({ result }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

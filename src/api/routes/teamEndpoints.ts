@@ -10,6 +10,7 @@ import getInvitationCode from './team/getInvitationCode';
 import getMember from './team/member/getMember';
 import getAllMembers from './team/member/getAllMembers';
 import updateMember from './team/member/updateMember';
+import getTeams from './team/getTeams';
 
 const route = Router();
 
@@ -20,7 +21,7 @@ export default (app: Router) => {
   updateTeam(app, route);
   getTeam(app, route);
   joinTeam(app, route);
-
+  getTeams(app, route);
   removeMember(app, route);
   refreshInvitationCode(app, route);
   getInvitationCode(app, route);

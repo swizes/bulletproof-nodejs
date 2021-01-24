@@ -82,6 +82,24 @@ export default async ({ expressApp }) => {
     model: require('../models/deviceModel').default,
   };
 
+  const goalModel = {
+    name: 'goalModel',
+    model: require('../models/goalModel').default,
+  };
+  const substitutionModel = {
+    name: 'substitutionModel',
+    model: require('../models/substitutionModel').default,
+  };
+
+  const bookingModel = {
+    name: 'bookingModel',
+    model: require('../models/bookingModel').default,
+  };
+
+  const otherMatchEventModel = {
+    name: 'otherMatchEventModel',
+    model: require('../models/otherMatchEventModel').default,
+  };
   // It returns the agenda instance because it's needed in the subsequent loaders
   await dependencyInjectorLoader({
     mongoConnection,
@@ -99,6 +117,11 @@ export default async ({ expressApp }) => {
       chatModel,
       notificationModel,
       deviceModel,
+      goalModel,
+      substitutionModel,
+      bookingModel,
+      otherMatchEventModel,
+
       // salaryModel,
       // whateverModel
     ],

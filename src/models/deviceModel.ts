@@ -25,6 +25,10 @@ const Device = new mongoose.Schema(
       required: true,
       default: true,
     },
+    language: {
+      type: String,
+      default: 'en',
+    },
   },
   { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } },
 );

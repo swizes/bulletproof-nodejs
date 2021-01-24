@@ -14,7 +14,7 @@ export default (app: Router, route: Router) => {
 
       const { device } = await deviceServiceInstance.SetDeviceNotificationToken(req.params.deviceId, req.body.token);
 
-      return res.json({ data: device }).status(200);
+      return res.json({ device }).status(200);
     } catch (e) {
       logger.error('🔥 error: %o', e);
       return next(e);

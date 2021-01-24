@@ -20,7 +20,7 @@ export default (app: Router, route: Router) => {
         const userId = req.currentUser._id;
         const { team } = await teamServiceInstance.JoinTeam(req.params.teamId, { userId, ...req.body });
 
-        return res.json({ data: team }).status(201);
+        return res.json({ team }).status(201);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

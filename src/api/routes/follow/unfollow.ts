@@ -20,7 +20,7 @@ export default (app: Router, route: Router) => {
         const { followType = 'user' } = req.body;
         const { success } = await followServiceInstance.Unfollow(followerId, followingId);
 
-        return res.json({ data: success }).status(200);
+        return res.json({ success }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

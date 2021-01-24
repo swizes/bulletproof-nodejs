@@ -7,7 +7,7 @@ import NotificationService from '../../../services/notificationService';
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
-  route.get(
+  route.post(
     '/notificationId:/mark-as-read',
     middlewares.isAuth,
 
@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
 
         const { notification } = await notificationServiceInstance.MarkAsRead(req.params.notificationId);
 
-        return res.json({ data: notification }).status(200);
+        return res.json({ notification }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

@@ -17,7 +17,7 @@ export default (app: Router, route: Router) => {
         const userServiceInstance = Container.get(UserService);
         const { user } = await userServiceInstance.GetUser(req.params.userId);
 
-        return res.json({ data: user }).status(200);
+        return res.json({ user }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

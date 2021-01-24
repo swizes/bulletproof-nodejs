@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
 
         const { homework } = await homeworkServiceInstance.GetHomework(req.params.homeworkId.toString());
 
-        return res.json({ data: homework }).status(200);
+        return res.json({ homework }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

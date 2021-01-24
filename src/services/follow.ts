@@ -44,6 +44,23 @@ export default class FollowService {
     }
   }
 
+  public async GetUserFollowStatus(
+    followerId: string,
+    followingId: string,
+  ): Promise<{ followData: any; followingData: any }> {
+    this.logger.silly('GetUserFollowStatusGetUserFollowStatus');
+    try {
+      const followData = await this.followModel.findOne({ followerId, followingId }).exec();
+      const followingData = await this.followModel.findOne({ followerId: followingId, followingId: followerId }).exec();
+
+      //Delete following notification
+
+      return { followData, followingData };
+    } catch (e) {
+      throw new Error('Unfollow failed');
+    }
+  }
+
   public async GetFollowersAndFollowings(userId: string): Promise<{ followers: IFollow[]; following: IFollow[] }> {
     const followers = await this.followModel.find({ followerId: userId });
     const following = await this.followModel.find({ followingId: userId });

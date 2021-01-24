@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from '../api';
 import config from '../config';
+const { errors } = require('celebrate');
 export default ({ app }: { app: express.Application }) => {
   /**
    * Health Check endpoints
@@ -53,10 +54,19 @@ export default ({ app }: { app: express.Application }) => {
   });
   app.use((err, req, res, next) => {
     res.status(err.status || 500);
-    res.json({
-      errors: {
-        message: err.message,
-      },
-    });
+
+    console.log(JSON.stringify(err));
+    if (err.joi) {
+      //if joi produces an error, it's likely a client-side problem
+      return res.status(400).json({
+        error: err.joi.message,
+      });
+    } else {
+      res.json({
+        errors: {
+          message: err.message,
+        },
+      });
+    }
   });
 };

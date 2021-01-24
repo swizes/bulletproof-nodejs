@@ -8,19 +8,19 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.get(
-    '/all',
+    '/content/:contentId',
     middlewares.isAuth,
 
     async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling GetAllEventHappiness endpoint for content: %o', req.query.contentId.toString());
+      logger.debug('Calling GetAllEventHappiness endpoint for content: %o', req.params.contentId.toString());
 
       try {
         const eventHappinessServiceInstance = Container.get(EventHappinessService);
 
-        const { contentId } = req.query;
+        const { contentId } = req.params;
         const { eventHappiness } = await eventHappinessServiceInstance.GetAllEventHappiness(contentId.toString());
 
-        return res.json({ data: eventHappiness }).status(200);
+        return res.json({ eventHappiness }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

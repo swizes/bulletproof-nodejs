@@ -153,7 +153,7 @@ export default class AuthService {
     const accessTokenExp = new Date(Date.now() + 60 * 1000 * 15);
 
     //7 day
-    const refreshTokenExp = new Date(Date.now() + 3600 * 1000 * 24 * 7);
+    const refreshTokenExp = new Date(Date.now() + 3600 * 1000 * 24 * 30);
 
     /*
     accessTokenExp.setMinutes(today.getMinutes() + 15);

@@ -17,7 +17,7 @@ export default (app: Router, route: Router) => {
         req.params.userId,
       );
 
-      return res.json({ data: device }).status(200);
+      return res.json({ device }).status(200);
     } catch (e) {
       logger.error('🔥 error: %o', e);
       return next(e);

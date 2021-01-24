@@ -8,7 +8,7 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.get(
-    '/user-chat/:recipientId',
+    '/user/:recipientId',
     middlewares.isAuth,
     middlewares.attachCurrentUser,
 
@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
         const chatServiceInstance = Container.get(ChatService);
         const currentUserId = req.currentUser._id;
         const { chat } = await chatServiceInstance.GetUserChat(currentUserId, req.params.recipientId);
-        return res.json({ data: chat }).status(200);
+        return res.json({ chat }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

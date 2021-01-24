@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
         const currentUserId = req.currentUser._id;
         const { eventRating } = await eventRatingServiceInstance.PostEventRating(currentUserId, { ...req.body });
 
-        return res.json({ data: eventRating }).status(200);
+        return res.json({ eventRating }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

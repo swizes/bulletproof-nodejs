@@ -9,7 +9,7 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.put(
-    '/:id',
+    '/:userId',
     middlewares.isAuth,
     middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -17,11 +17,11 @@ export default (app: Router, route: Router) => {
       try {
         const followServiceInstance = Container.get(FollowService);
         const followerId = req.currentUser._id;
-        const followingId = req.params.id;
+        const followingId = req.params.userId;
         const { followType = 'user' } = req.body;
         const { follow } = await followServiceInstance.Follow(followerId, followingId, followType);
 
-        return res.json({ data: follow }).status(200);
+        return res.json({ follow }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

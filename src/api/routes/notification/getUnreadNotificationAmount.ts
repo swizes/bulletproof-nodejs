@@ -19,7 +19,7 @@ export default (app: Router, route: Router) => {
         const userId = req.currentUser._id;
         const { unreadAmount } = await notificationServiceInstance.GetUnreadNotificationAmount(userId);
 
-        return res.json({ data: unreadAmount }).status(200);
+        return res.json({ unreadAmount }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

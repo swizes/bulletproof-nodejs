@@ -12,7 +12,7 @@ export default (app: Router, route: Router) => {
       const teamServiceInstance = Container.get(TeamService);
       const { invitationCode } = await teamServiceInstance.GetInvitationCode(req.params.teamId);
 
-      return res.json({ data: invitationCode }).status(201);
+      return res.json({ invitationCode }).status(201);
     } catch (e) {
       logger.error('🔥 error: %o', e);
       return next(e);

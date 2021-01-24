@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
         const teamServiceInstance = Container.get(TeamService);
         const { team } = await teamServiceInstance.RemoveMember(req.params.teamId, req.params.userId);
 
-        return res.json({ data: team }).status(201);
+        return res.json({ team }).status(201);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);
