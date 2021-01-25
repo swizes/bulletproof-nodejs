@@ -38,9 +38,11 @@ const EventHappiness = new mongoose.Schema(
 );
 
 EventHappiness.virtual('user', {
+  type: 'ObjectId',
   ref: 'User',
   localField: 'userId',
   foreignField: '_id',
+  justOne: true,
 });
 
 EventHappiness.methods = {};

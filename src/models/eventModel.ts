@@ -59,9 +59,11 @@ const Event = new mongoose.Schema(
 );
 
 Event.virtual('team', {
+  type: 'ObjectId',
   ref: 'Team',
   localField: 'teamId',
   foreignField: '_id',
+  justOne: true,
 });
 
 Event.methods = {};

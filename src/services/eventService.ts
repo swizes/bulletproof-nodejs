@@ -34,18 +34,18 @@ export default class EventService {
 
     //ToDo: Convert this to aggregate, much cleaner
     try {
-      const teams = await this.teamModel
-        .find({
-          'members.userId': currentUserId,
-        })
-        .populate({ path: 'team', select: 'name' });
+      const teams = await this.teamModel.find({
+        'members.userId': currentUserId,
+      });
 
       let events = [];
 
       for (const team of teams) {
-        const doc = await this.eventModel.find({
-          teamId: team._id,
-        });
+        const doc = await this.eventModel
+          .find({
+            teamId: team._id,
+          })
+          .populate({ path: 'team', select: 'name' });
         events = [...events, ...doc];
       }
       return { events };

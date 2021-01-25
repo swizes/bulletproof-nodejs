@@ -58,7 +58,7 @@ export default class EventRatingService {
 
     if (eventRatingRecords) {
       // @ts-ignore
-      const eventRatings = eventRatingRecords.toObject();
+      const eventRatings = eventRatingRecords;
       return { eventRatings };
     } else {
       throw new Error(logStr + ' failed');

@@ -18,7 +18,7 @@ export default (app: Router, route: Router) => {
 
         const userId = req.currentUser._id;
 
-        const { events = [] } = await eventServiceInstance.GetUserEvents(userId);
+        const { events } = await eventServiceInstance.GetUserEvents(userId);
 
         return res.json({ events }).status(200);
       } catch (e) {

@@ -20,11 +20,12 @@ export default class TrainingService {
     this.logger.silly(logStr);
     const trainingRecord = await this.trainingModel.create({
       ...trainingInputDTO,
+      creatorId: currentUserId,
     });
 
     if (trainingRecord) {
       // @ts-ignore
-      const training = trainingRecord
+      const training = trainingRecord;
       return { training };
     } else {
       throw new Error(logStr + ' failed');
@@ -43,7 +44,7 @@ export default class TrainingService {
 
     if (trainingRecord) {
       // @ts-ignore
-      const training = trainingRecord
+      const training = trainingRecord;
       return { training };
     } else {
       throw new Error(logStr + ' failed');
@@ -57,7 +58,7 @@ export default class TrainingService {
 
     if (trainingRecord) {
       // @ts-ignore
-      const training = trainingRecord
+      const training = trainingRecord;
       return { training };
     } else {
       throw new Error(logStr + ' failed');
@@ -71,7 +72,7 @@ export default class TrainingService {
 
     if (trainingRecord) {
       // @ts-ignore
-      const training = trainingRecord
+      const training = trainingRecord;
       return { training };
     } else {
       throw new Error(logStr + ' failed');
@@ -84,7 +85,7 @@ export default class TrainingService {
 
     if (trainingRecords) {
       // @ts-ignore
-      const trainings = trainingRecords.toObject();
+      const trainings = trainingRecords;
       return { trainings };
     } else {
       throw new Error(logStr + ' failed');
@@ -106,17 +107,14 @@ export default class TrainingService {
           { arrayFilters: [{ 'attendances.userId': userId }], useFindAndModify: false },
           async (err, section) => {
             // check if section was found
-            console.log(err);
-            console.log(section);
 
             let doc = null;
             if (!section) {
-              console.log('not found');
               doc = await this.trainingModel.findOneAndUpdate(
                 { _id: trainingId },
                 {
                   $addToSet: {
-                    attendance: {
+                    attendances: {
                       userId,
                       status,
                     },
@@ -126,8 +124,8 @@ export default class TrainingService {
               );
             } else {
               doc = await this.trainingModel.findOneAndUpdate(
-                { _id: trainingId, 'attendance.userId': userId },
-                { $set: { 'attendance.$.userId': userId, 'attendance.$.status': status } },
+                { _id: trainingId, 'attendances.userId': userId },
+                { $set: { 'attendances.$.userId': userId, 'attendances.$.status': status } },
                 { new: true },
               );
             }

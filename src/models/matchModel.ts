@@ -1,6 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
 import { IMatch } from '../interfaces/IMatch';
+import { ITraining } from '../interfaces/ITraining';
+import Event from './eventModel';
 
 const Match = new mongoose.Schema(
   {
@@ -143,9 +145,66 @@ const Match = new mongoose.Schema(
 );
 
 Match.virtual('team', {
+  type: 'ObjectId',
   ref: 'Team',
   localField: 'teamId',
   foreignField: '_id',
+  justOne: true,
+});
+
+// @ts-ignore
+Match.post('save', (doc: ITraining) => {
+  const event = {
+    contentId: doc._id,
+    startDate: doc.startDate,
+    endDate: doc.endDate,
+    contentType: 'match',
+    title: doc.title,
+    teamId: doc.teamId,
+    location: doc.location,
+  };
+
+  // @ts-ignore
+  Event.create(event).then(
+    res => {
+      console.log('match Event Created', res._id);
+    },
+    err => {
+      console.log('match Event Not Created', err);
+    },
+  );
+});
+
+// @ts-ignore
+Match.post('findOneAndUpdate', (doc: ITraining) => {
+  const event = {
+    contentId: doc._id,
+    startDate: doc.startDate,
+    endDate: doc.endDate,
+    contentType: 'match',
+    title: doc.title,
+    teamId: doc.teamId,
+    location: doc.location,
+  };
+
+  Event.findOneAndUpdate(
+    { contentId: event.contentId },
+    // @ts-ignore
+    { ...event },
+    {
+      upsert: true,
+      new: true,
+    },
+    (err, doc1, res) => {
+      console.log('Event updated');
+    },
+  );
+});
+
+Match.post('findOneAndDelete', function (doc) {
+  Event.findOneAndDelete({ contentId: doc._id }, null, (err, doc1) => {
+    console.log('event deleted');
+  });
 });
 
 Match.methods = {};

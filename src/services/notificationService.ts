@@ -34,7 +34,7 @@ export default class NotificationService {
 
     if (notificationRecords) {
       // @ts-ignore
-      const notifications = notificationRecords.toObject();
+      const notifications = notificationRecords;
       return { notifications };
     } else {
       throw new Error(logStr + ' failed');
@@ -62,7 +62,7 @@ export default class NotificationService {
 
     if (notificationRecords) {
       // @ts-ignore
-      const notifications = notificationRecords.toObject();
+      const notifications = notificationRecords;
       return { unreadAmount: notifications.length };
     } else {
       throw new Error(logStr + ' failed');

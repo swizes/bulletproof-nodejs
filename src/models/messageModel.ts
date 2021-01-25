@@ -56,9 +56,11 @@ const Message = new mongoose.Schema(
 );
 
 Message.virtual('user', {
+  type: 'ObjectId',
   ref: 'User',
   localField: 'userId',
   foreignField: '_id',
+  justOne: true,
 });
 
 Message.methods = {};

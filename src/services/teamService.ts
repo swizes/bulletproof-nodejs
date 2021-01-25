@@ -43,10 +43,11 @@ export default class TeamService {
     }
   }
 
-  public async DeleteTeam(teamId: string, owner: string): Promise<{ success: boolean }> {
+  public async DeleteTeam(teamId: string, ownerId: string): Promise<{ success: boolean }> {
     try {
       this.logger.silly('Deleting Team');
-      await this.teamModel.findOneAndDelete({ teamId, owner });
+      // @ts-ignore
+      await this.teamModel.findByIdAndDelete(teamId, { ownerId });
       return { success: true };
     } catch (e) {
       throw new Error('Could not delete the team');
@@ -67,7 +68,7 @@ export default class TeamService {
 
   public async GetTeamByCode(invitationCode: string): Promise<{ team: ITeam }> {
     this.logger.silly('Getting Team');
-    const teamRecord = await this.teamModel.findOne({ invitationCode });
+    const teamRecord = await this.teamModel.findOne({ invitationCode }).populate('ownerId');
     const team = teamRecord;
 
     if (teamRecord) {
@@ -93,7 +94,7 @@ export default class TeamService {
     this.logger.silly('Refreshing Invitation Code');
     const teamRecord = await this.teamModel
       .findOneAndUpdate(
-        { teamId, 'members.userId': userId },
+        { _id: teamId, 'members.userId': userId },
         {
           invitationCode: await this.generateCode(),
         },
@@ -143,7 +144,7 @@ export default class TeamService {
   public async UpdateMember(teamId: string, userId: string, memberObject: any) {
     this.logger.silly('Update Member Item');
 
-    return Team.findOne({ teamId, 'members.userId': userId }).then(
+    return Team.findOne({ _id: teamId, 'members.userId': userId }).then(
       team => {
         const memberIndex = team.members.map(item => item.userId).indexOf(userId);
         team.members[memberIndex] = memberObject;
@@ -159,7 +160,7 @@ export default class TeamService {
   public async GetAllMembers(teamId: string) {
     this.logger.silly('Getting All Team Members');
 
-    const teamRecord = await this.teamModel.findById({ teamId });
+    const teamRecord = await this.teamModel.findById(teamId);
 
     if (!teamRecord) {
       throw new Error('Could not get members. Team does not exist ');
@@ -238,7 +239,7 @@ export default class TeamService {
     let codeExists = true;
     let invitationCode = '';
     while (codeExists) {
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      const characters = 'ABCDEF123456789';
       const charactersLength = characters.length;
       for (let i = 0; i < 6; i++) {
         invitationCode += characters.charAt(Math.floor(Math.random() * charactersLength));

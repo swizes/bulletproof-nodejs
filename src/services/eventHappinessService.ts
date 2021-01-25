@@ -23,7 +23,7 @@ export default class EventHappinessService {
 
     if (eventHappinessRecord) {
       // @ts-ignore
-      const eventHappiness = eventHappinessRecord
+      const eventHappiness = eventHappinessRecord;
       return { eventHappiness };
     } else {
       throw new Error(logStr + ' failed');
@@ -33,34 +33,24 @@ export default class EventHappinessService {
   public async GetEventHappiness(userId: string, contentId: string): Promise<{ eventHappiness: IEventHappiness }> {
     const logStr = 'Get Event Happiness';
     this.logger.silly(logStr);
-    const eventHappinessRecord = await this.eventHappinessModel.findOne({
+    const eventHappiness = await this.eventHappinessModel.findOne({
       userId,
       contentId,
     });
-
-    if (eventHappinessRecord) {
-      // @ts-ignore
-      const eventHappiness = eventHappinessRecord
-      return { eventHappiness };
-    } else {
-      throw new Error(logStr + ' failed');
-    }
+    return { eventHappiness };
   }
 
   public async GetAllEventHappiness(contentId: string): Promise<{ eventHappiness: IEventHappiness[] }> {
     const logStr = 'GetAllEventHappiness';
     this.logger.silly(logStr);
-    const eventHappinessRecords = await this.eventHappinessModel.find({
-      contentId,
-    });
+    const eventHappinessRecords = await this.eventHappinessModel
+      .find({
+        contentId,
+      })
+      .populate('user');
 
-    if (eventHappinessRecords) {
-      // @ts-ignore
-      const eventHappiness = eventHappinessRecords.toObject();
-      return { eventHappiness };
-    } else {
-      throw new Error(logStr + ' failed');
-    }
+    const eventHappiness = eventHappinessRecords;
+    return { eventHappiness };
   }
 
   public async GetUserHappinessAvg(
