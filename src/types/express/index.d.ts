@@ -16,6 +16,7 @@ import { IGoal } from '../../interfaces/IGoal';
 import { ISubstitution } from '../../interfaces/ISubstitution';
 import { IBooking } from '../../interfaces/IBooking';
 import { IOtherMatchEvent } from '../../interfaces/IOtherMatchEvent';
+import { IVideo } from '../../interfaces/IVideo';
 declare global {
   namespace Express {
     export interface Request {
@@ -41,5 +42,6 @@ declare global {
     export type SubstitutionModel = Model<ISubstitution & Document>;
     export type BookingModel = Model<IBooking & Document>;
     export type OtherMatchEventModel = Model<IOtherMatchEvent & Document>;
+    export type VideoModel = Model<IVideo & Document>;
   }
 }

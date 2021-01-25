@@ -7,8 +7,11 @@ const route = Router();
 
 export default (app: Router) => {
   app.use('/auth', route);
+  //refresh-token
   refreshToken(app, route);
+  //signin
   signin(app, route);
+  //signup
   signup(app, route);
   return app;
 };

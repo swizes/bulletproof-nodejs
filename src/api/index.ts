@@ -14,6 +14,7 @@ import deviceEndpoints from './routes/deviceEndpoints';
 import eventRatingEndpoints from './routes/eventRatingEndpoints';
 import matchEndpoints from './routes/matchEndpoints';
 import matchEventEndpoints from './routes/matchEventEndpoints';
+import videosEndpoints from './routes/videosEndpoints';
 
 // guaranteed to get dependencies
 export default () => {
@@ -33,6 +34,7 @@ export default () => {
   teamEndpoints(app);
   trainingEndpoints(app);
   userEndpoints(app);
+  videosEndpoints(app);
 
   return app;
 };

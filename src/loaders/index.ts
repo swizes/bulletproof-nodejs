@@ -100,6 +100,11 @@ export default async ({ expressApp }) => {
     name: 'otherMatchEventModel',
     model: require('../models/otherMatchEventModel').default,
   };
+
+  const videoModel = {
+    name: 'videoModel',
+    model: require('../models/videoModel').default,
+  };
   // It returns the agenda instance because it's needed in the subsequent loaders
   await dependencyInjectorLoader({
     mongoConnection,
@@ -121,7 +126,7 @@ export default async ({ expressApp }) => {
       substitutionModel,
       bookingModel,
       otherMatchEventModel,
-
+      videoModel,
       // salaryModel,
       // whateverModel
     ],

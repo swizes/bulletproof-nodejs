@@ -8,9 +8,13 @@ const route = Router();
 
 export default (app: Router) => {
   app.use('/chats', route);
+  ///user/:recipientId
   getUserChat(app, route);
+  //:chatId/messages
   getMessages(app, route);
+  //:chatId/messages
   addMessage(app, route);
+  //
   getChats(app, route);
 
   return app;

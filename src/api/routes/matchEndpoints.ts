@@ -1,8 +1,4 @@
 import { Router } from 'express';
-import getUserChat from './chat/getUserChat';
-import getMessages from './chat/getMessages';
-import addMessage from './chat/addMessage';
-import getChats from './chat/getChats';
 import updateTimer from './match/updateTimer';
 import addExtraTime from './match/addExtraTime';
 import finishMatch from './match/finishMatch';

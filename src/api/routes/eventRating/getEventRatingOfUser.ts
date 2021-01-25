@@ -8,7 +8,7 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.get(
-    '/content/contentId:/users/:userId',
+    '/content/:contentId/users/:userId',
     middlewares.isAuth,
     async (req: Request, res: Response, next: NextFunction) => {
       logger.debug('Calling GetEventRatingOfUser endpoint');

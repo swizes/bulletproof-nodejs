@@ -10,10 +10,15 @@ const route = Router();
 
 export default (app: Router) => {
   app.use('/event-happiness', route);
-  getEventHappiness(app, route);
-  getAllEventHappiness(app, route);
+  ///team/:teamId/user/:userId
   getUserHappinessAvg(app, route);
+  ///team/:teamId
   getTeamHappinessAvg(app, route);
+  ///content/:contentId/user
+  getEventHappiness(app, route);
+  ///content/:contentId'
+  getAllEventHappiness(app, route);
+  ///content/:contentId
   postEventHappiness(app, route);
 
   return app;

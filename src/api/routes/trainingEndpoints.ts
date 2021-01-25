@@ -14,8 +14,8 @@ const route = Router();
 export default (app: Router) => {
   app.use('/trainings', route);
   setAttendance(app, route);
-  createTraining(app, route);
   getTrainings(app, route);
+  createTraining(app, route);
   updateTraining(app, route);
   deleteTraining(app, route);
   getTraining(app, route);

@@ -11,13 +11,13 @@ export default class SearchService {
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
 
-  public async Search(searchKey: string, searchValue: string, currentUid: string) {
+  public async Search(searchKey: string, searchValue: string, currentUserId: string) {
     this.logger.silly('Search');
 
     try {
       switch (searchKey) {
         case 'user':
-          return { result: await this.searchUser(currentUid, searchValue) };
+          return { result: await this.searchUser(currentUserId, searchValue) };
         case 'team':
           return { result: await this.searchTeam(searchValue) };
         default:
@@ -48,9 +48,9 @@ export default class SearchService {
     return teams;
   }
 
-  private async searchUser(currentUid: string, searchValue: string) {
+  private async searchUser(currentUserId: string, searchValue: string) {
     const match = {
-      _id: { $ne: currentUid },
+      _id: { $ne: currentUserId },
     };
 
     if (searchValue !== '') {

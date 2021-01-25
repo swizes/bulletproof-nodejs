@@ -8,7 +8,7 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.post(
-    '/notificationId:/mark-as-read',
+    '/:notificationId/mark-as-read',
     middlewares.isAuth,
 
     async (req: Request, res: Response, next: NextFunction) => {

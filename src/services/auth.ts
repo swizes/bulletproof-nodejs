@@ -122,9 +122,9 @@ export default class AuthService {
       this.logger.silly('Refresh token  exists');
       this.logger.silly('Generating new JWT');
 
-      const uid = this.decodeRefreshToken(oldRefreshToken);
-      this.logger.debug('Decoded Refresh Token uid: %s', uid);
-      const userRecord = await this.userModel.findById(uid);
+      const userId = this.decodeRefreshToken(oldRefreshToken);
+      this.logger.debug('Decoded Refresh Token userId: %s', userId);
+      const userRecord = await this.userModel.findById(userId);
 
       if (!userRecord) {
         throw new Error('User not exist');
@@ -133,7 +133,7 @@ export default class AuthService {
       Reflect.deleteProperty(user, 'password');
       Reflect.deleteProperty(user, 'salt');
 
-      const { accessToken, refreshToken } = this.generateToken(uid);
+      const { accessToken, refreshToken } = this.generateToken(userId);
 
       return { user, accessToken, refreshToken };
     } else {
@@ -146,7 +146,7 @@ export default class AuthService {
     return decoded._id;
   }
 
-  private generateToken(uid) {
+  private generateToken(userId) {
     const today = new Date();
 
     //15 min
@@ -174,11 +174,11 @@ export default class AuthService {
      * because it doesn't have _the secret_ to sign it
      * more information here: https://softwareontheroad.com/you-dont-need-passport
      */
-    this.logger.silly(`Sign JWT for userId: ${uid}`);
+    this.logger.silly(`Sign JWT for userId: ${userId}`);
 
     const accessToken = jwt.sign(
       {
-        _id: uid, // We are gonna use this in the middleware 'isAuth'
+        _id: userId, // We are gonna use this in the middleware 'isAuth'
 
         exp: accessTokenExp.getTime() / 1000,
       },
@@ -187,7 +187,7 @@ export default class AuthService {
 
     const refreshToken = jwt.sign(
       {
-        _id: uid,
+        _id: userId,
         exp: refreshTokenExp.getTime() / 1000,
       },
       config.jwtRefreshSecret,

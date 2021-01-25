@@ -8,7 +8,7 @@ export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
   route.delete(
-    '/:id',
+    '/:userId',
     middlewares.isAuth,
     middlewares.attachCurrentUser,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +16,7 @@ export default (app: Router, route: Router) => {
       try {
         const followServiceInstance = Container.get(FollowService);
         const followerId = req.currentUser._id;
-        const followingId = req.params.id;
+        const followingId = req.params.userId;
         const { followType = 'user' } = req.body;
         const { success } = await followServiceInstance.Unfollow(followerId, followingId);
 

@@ -13,13 +13,22 @@ const route = Router();
 
 export default (app: Router) => {
   app.use('/homeworks', route);
-  getHomeworks(app, route);
+
+  //'/:homeworkId/submissions/:submissionId',
   postHomeworkSubmissionFeedback(app, route);
+  ///:homeworkId/submissions
   postHomeworkSubmission(app, route);
+  ///:homeworkId/video
   updateHomeworkVideo(app, route);
+  ///:homeworkId
   updateHomework(app, route);
+  ///:homeworkId
   deleteHomework(app, route);
+  ///:homeworkId
   getHomework(app, route);
+  ///
   postHomework(app, route);
+  ///
+  getHomeworks(app, route);
   return app;
 };

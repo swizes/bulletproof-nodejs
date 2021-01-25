@@ -11,7 +11,7 @@ export default class EventRatingService {
   ) {}
 
   public async PostEventRating(
-    currentUid: string,
+    currentUserId: string,
     eventRatingDTO: IEventRatingDTO,
   ): Promise<{ eventRating: IEventRating }> {
     const logStr = 'PostEventRating';
@@ -25,7 +25,7 @@ export default class EventRatingService {
       },
       {
         ...eventRatingDTO,
-        givenBy: currentUid,
+        givenBy: currentUserId,
       },
       { upsert: true, new: true },
     );

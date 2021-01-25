@@ -1,9 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
-import { IFollow } from '../interfaces/IFollow';
+import { IVideo } from '../interfaces/IVideo';
 
-const Message = new mongoose.Schema(
+const VideoSchema = new mongoose.Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    teamId: { type: Schema.Types.ObjectId, ref: 'Team', required: true },
     videoUrl: {
       type: String,
       required: true,
@@ -25,6 +26,6 @@ const Message = new mongoose.Schema(
   { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } },
 );
 
-Message.methods = {};
+VideoSchema.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('Message', Message);
+export default mongoose.model<IVideo & mongoose.Document>('Video', VideoSchema);

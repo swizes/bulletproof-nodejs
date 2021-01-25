@@ -8,9 +8,13 @@ const route = Router();
 
 export default (app: Router) => {
   app.use('/event-ratings', route);
-  getEventRatingOfUser(app, route);
+  //team/:teamId/user/:userId
   getUserRatings(app, route);
+  ///content/:contentId/users/:userId
+  getEventRatingOfUser(app, route);
+  //content/:contentId
   getEventRatings(app, route);
+  //
   postEventRating(app, route);
 
   return app;
