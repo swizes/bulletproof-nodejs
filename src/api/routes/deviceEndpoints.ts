@@ -7,11 +7,11 @@ const route = Router();
 
 export default (app: Router) => {
   app.use('/devices', route);
-  //:deviceId/user/:userId
+  //user/:userId
   addUserToDeviceNotificationToken(app, route);
-  ///:deviceId/user/:userId
+  ///user/:userId
   deleteUserFromDeviceNotificationToken(app, route);
-  ///:deviceId/token
+  ///token
   setDeviceNotificationToken(app, route);
   return app;
 };

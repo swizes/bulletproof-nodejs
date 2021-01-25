@@ -7,13 +7,13 @@ import DeviceService from '../../../services/deviceService';
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
-  route.post('/:deviceId/user/:userId', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
+  route.post('/user/:userId', async (req: Request, res: Response, next: NextFunction) => {
     logger.debug('Calling AddUserToDeviceNotificationToken endpoint');
     try {
       const deviceServiceInstance = Container.get(DeviceService);
 
       const { device } = await deviceServiceInstance.AddUserToDeviceNotificationToken(
-        req.params.deviceId,
+        req.body.deviceId,
         req.params.userId,
       );
 

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
+import { IEventHappiness } from '../interfaces/IEventHappiness';
 
 const EventHappiness = new mongoose.Schema(
   {
@@ -36,6 +37,12 @@ const EventHappiness = new mongoose.Schema(
   { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } },
 );
 
+EventHappiness.virtual('user', {
+  ref: 'User',
+  localField: 'userId',
+  foreignField: '_id',
+});
+
 EventHappiness.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('EventHappiness', EventHappiness);
+export default mongoose.model<IEventHappiness & mongoose.Document>('EventHappiness', EventHappiness);

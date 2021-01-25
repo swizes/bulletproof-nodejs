@@ -36,14 +36,13 @@ export default class EventRatingService {
   public async GetEventRatingOfUser(userId: string, contentId: string): Promise<{ eventRating: IEventRating }> {
     const logStr = 'GetEventRatingOfUser';
     this.logger.silly(logStr);
-    const eventRatingRecord = await this.eventRatingModel.find({
+    const eventRatingRecords = await this.eventRatingModel.findOne({
       contentId,
       userId,
     });
 
-    if (eventRatingRecord) {
-      // @ts-ignore
-      const eventRating = eventRatingRecord.toObject();
+    if (eventRatingRecords) {
+      const eventRating = eventRatingRecords;
       return { eventRating };
     } else {
       throw new Error(logStr + ' failed');
@@ -75,8 +74,7 @@ export default class EventRatingService {
     });
 
     if (eventRatingRecords) {
-      // @ts-ignore
-      const eventRatings = eventRatingRecords.toObject();
+      const eventRatings = eventRatingRecords;
       return { eventRatings };
     } else {
       throw new Error(logStr + ' failed');

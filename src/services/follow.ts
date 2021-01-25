@@ -24,7 +24,7 @@ export default class FollowService {
 
     if (followRecord) {
       // @ts-ignore
-      const follow = followRecord.toObject();
+      const follow = followRecord;
       return { follow };
     } else {
       throw new Error('Follow failed');

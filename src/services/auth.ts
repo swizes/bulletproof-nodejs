@@ -70,7 +70,7 @@ export default class AuthService {
        * that transforms data from layer to layer
        * but that's too over-engineering for now
        */
-      const user = userRecord.toObject();
+      const user = userRecord;
       Reflect.deleteProperty(user, 'password');
       Reflect.deleteProperty(user, 'salt');
       return { user, accessToken, refreshToken };
@@ -98,7 +98,7 @@ export default class AuthService {
       this.logger.silly('Generating JWT');
       const { accessToken, refreshToken } = this.generateToken(userRecord._id);
 
-      const user = userRecord.toObject();
+      const user = userRecord;
       Reflect.deleteProperty(user, 'password');
       Reflect.deleteProperty(user, 'salt');
       /**
@@ -129,7 +129,7 @@ export default class AuthService {
       if (!userRecord) {
         throw new Error('User not exist');
       }
-      const user = userRecord.toObject();
+      const user = userRecord;
       Reflect.deleteProperty(user, 'password');
       Reflect.deleteProperty(user, 'salt');
 

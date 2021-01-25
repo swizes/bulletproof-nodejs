@@ -22,7 +22,7 @@ export default class UserService {
     const userRecord = await this.userModel.findById(userId);
 
     // @ts-ignore
-    const user = userRecord.toObject();
+    const user = userRecord;
     if (userRecord) {
       return { user };
     } else {
@@ -38,7 +38,7 @@ export default class UserService {
     }
   }
 
-  //ToDo:    const user = userRecord.toObject(); is  not working
+  //ToDo:    const user = userRecord is  not working
   public async UpdateUser(_id: string, updateDTO: IUser): Promise<{ user: IUser }> {
     this.logger.silly('Updating user');
     const userRecord = await this.userModel.findByIdAndUpdate(_id, { ...updateDTO }, { upsert: true, new: true });

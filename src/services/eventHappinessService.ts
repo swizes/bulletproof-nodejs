@@ -23,7 +23,7 @@ export default class EventHappinessService {
 
     if (eventHappinessRecord) {
       // @ts-ignore
-      const eventHappiness = eventHappinessRecord.toObject();
+      const eventHappiness = eventHappinessRecord
       return { eventHappiness };
     } else {
       throw new Error(logStr + ' failed');
@@ -40,7 +40,7 @@ export default class EventHappinessService {
 
     if (eventHappinessRecord) {
       // @ts-ignore
-      const eventHappiness = eventHappinessRecord.toObject();
+      const eventHappiness = eventHappinessRecord
       return { eventHappiness };
     } else {
       throw new Error(logStr + ' failed');

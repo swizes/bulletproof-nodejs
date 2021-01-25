@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
+import { IMessage } from '../interfaces/IMessage';
 
 const Message = new mongoose.Schema(
   {
@@ -54,6 +55,12 @@ const Message = new mongoose.Schema(
   { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } },
 );
 
+Message.virtual('user', {
+  ref: 'User',
+  localField: 'userId',
+  foreignField: '_id',
+});
+
 Message.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('Message', Message);
+export default mongoose.model<IMessage & mongoose.Document>('Message', Message);

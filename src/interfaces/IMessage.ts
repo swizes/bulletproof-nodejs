@@ -22,4 +22,5 @@ export interface IMessage {
       timestamp: number;
     },
   ];
+  createdAt: string;
 }

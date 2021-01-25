@@ -27,7 +27,7 @@ export default class ChatService {
 
     if (chatRecord) {
       // @ts-ignore
-      const chat = chatRecord.toObject();
+      const chat = chatRecord;
       return { chat };
     } else {
       throw new Error(logStr + ' failed');
@@ -59,7 +59,10 @@ export default class ChatService {
   public async GetMessages(chatId: string): Promise<{ messages: IMessage[] }> {
     const logStr = 'GetMessages';
     this.logger.silly(logStr);
-    const messageRecords = await this.messageModel.find({ chatId }).sort({ createdAt: -1 });
+    const messageRecords = await this.messageModel
+      .find({ chatId })
+
+      .sort({ createdAt: -1 });
 
     if (messageRecords) {
       // @ts-ignore
@@ -80,7 +83,7 @@ export default class ChatService {
 
     if (messageRecord) {
       // @ts-ignore
-      const message = messageRecord.toObject();
+      const message = messageRecord;
 
       await this.chatModel.findByIdAndUpdate(chatId, {
         lastMessageId: message._id,

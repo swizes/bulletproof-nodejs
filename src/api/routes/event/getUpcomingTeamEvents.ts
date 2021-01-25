@@ -12,7 +12,7 @@ export default (app: Router, route: Router) => {
     try {
       const eventServiceInstance = Container.get(EventService);
 
-      const teamId = req.query.teamId.toString();
+      const teamId = req.params.teamId;
 
       const { events = [] } = await eventServiceInstance.GetUpcomingTeamEvents(teamId);
 

@@ -7,24 +7,20 @@ import DeviceService from '../../../services/deviceService';
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
-  route.delete(
-    '/:deviceId/user/:userId',
-    middlewares.isAuth,
-    async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling DeleteUserFromDeviceNotificationToken endpoint');
-      try {
-        const deviceServiceInstance = Container.get(DeviceService);
+  route.delete('/user/:userId', async (req: Request, res: Response, next: NextFunction) => {
+    logger.debug('Calling DeleteUserFromDeviceNotificationToken endpoint');
+    try {
+      const deviceServiceInstance = Container.get(DeviceService);
 
-        const { device } = await deviceServiceInstance.DeleteUserFromDeviceNotificationToken(
-          req.params.deviceId,
-          req.params.userId,
-        );
+      const { device } = await deviceServiceInstance.DeleteUserFromDeviceNotificationToken(
+        req.query.deviceId.toString(),
+        req.params.userId,
+      );
 
-        return res.json({ device }).status(200);
-      } catch (e) {
-        logger.error('🔥 error: %o', e);
-        return next(e);
-      }
-    },
-  );
+      return res.json({ device }).status(200);
+    } catch (e) {
+      logger.error('🔥 error: %o', e);
+      return next(e);
+    }
+  });
 };

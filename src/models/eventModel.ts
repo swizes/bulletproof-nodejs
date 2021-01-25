@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
+import { IEvent } from '../interfaces/IEvent';
 
 const Event = new mongoose.Schema(
   {
@@ -65,4 +66,4 @@ Event.virtual('team', {
 
 Event.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('Event', Event);
+export default mongoose.model<IEvent & mongoose.Document>('Event', Event);

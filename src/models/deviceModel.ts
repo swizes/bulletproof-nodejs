@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
+import { IDevice } from '../interfaces/IDevice';
 
 //ToDo keep only one userId if the request comes from web app
 const Device = new mongoose.Schema(
@@ -35,4 +36,4 @@ const Device = new mongoose.Schema(
 
 Device.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('Device', Device);
+export default mongoose.model<IDevice & mongoose.Document>('Device', Device);

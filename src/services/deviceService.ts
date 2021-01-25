@@ -21,7 +21,7 @@ export default class DeviceService {
 
     if (deviceRecord) {
       // @ts-ignore
-      const device = deviceRecord.toObject();
+      const device = deviceRecord;
       return { device };
     } else {
       throw new Error(logStr + ' failed');
@@ -39,14 +39,14 @@ export default class DeviceService {
 
     if (deviceRecord) {
       // @ts-ignore
-      const device = deviceRecord.toObject();
+      const device = deviceRecord;
       return { device };
     } else {
       throw new Error(logStr + ' failed');
     }
   }
 
-  public async DeleteUserFromDeviceNotificationToken(deviceId: string, userId): Promise<{ device: IDevice }> {
+  public async DeleteUserFromDeviceNotificationToken(deviceId: string, userId: string): Promise<{ device: IDevice }> {
     const logStr = 'DeleteUserFromDeviceNotificationToken';
     this.logger.silly(logStr);
     const deviceRecord = await this.deviceModel.findOneAndUpdate(
@@ -57,7 +57,7 @@ export default class DeviceService {
 
     if (deviceRecord) {
       // @ts-ignore
-      const device = deviceRecord.toObject();
+      const device = deviceRecord;
       return { device };
     } else {
       throw new Error(logStr + ' failed');
@@ -75,7 +75,7 @@ export default class DeviceService {
 
     if (deviceRecord) {
       // @ts-ignore
-      const device = deviceRecord.toObject();
+      const device = deviceRecord;
       return { device };
     } else {
       throw new Error(logStr + ' failed');

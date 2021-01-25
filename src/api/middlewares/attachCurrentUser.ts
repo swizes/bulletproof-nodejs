@@ -13,12 +13,12 @@ const attachCurrentUser = async (req, res, next) => {
   const Logger: Logger = Container.get('logger');
   try {
     const UserModel = Container.get('userModel') as mongoose.Model<IUser & mongoose.Document>;
-    Logger.debug('Attaching current user for user: %s', req.token._id);
+    //Logger.debug('Attaching current user for user: %s', req.token._id);
     const userRecord = await UserModel.findById(req.token._id);
     if (!userRecord) {
       return res.sendStatus(401);
     }
-    const currentUser = userRecord.toObject();
+    const currentUser = userRecord
 
     req.currentUser = currentUser;
     return next();

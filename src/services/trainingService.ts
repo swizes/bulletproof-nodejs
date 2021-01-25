@@ -24,7 +24,7 @@ export default class TrainingService {
 
     if (trainingRecord) {
       // @ts-ignore
-      const training = trainingRecord.toObject();
+      const training = trainingRecord
       return { training };
     } else {
       throw new Error(logStr + ' failed');
@@ -43,7 +43,7 @@ export default class TrainingService {
 
     if (trainingRecord) {
       // @ts-ignore
-      const training = trainingRecord.toObject();
+      const training = trainingRecord
       return { training };
     } else {
       throw new Error(logStr + ' failed');
@@ -57,7 +57,7 @@ export default class TrainingService {
 
     if (trainingRecord) {
       // @ts-ignore
-      const training = trainingRecord.toObject();
+      const training = trainingRecord
       return { training };
     } else {
       throw new Error(logStr + ' failed');
@@ -67,11 +67,11 @@ export default class TrainingService {
   public async GetTraining(trainingId: string): Promise<{ training: ITraining }> {
     const logStr = 'GetTraining';
     this.logger.silly(logStr);
-    const trainingRecord = await this.trainingModel.findById(trainingId);
+    const trainingRecord = await this.trainingModel.findById(trainingId).populate('team');
 
     if (trainingRecord) {
       // @ts-ignore
-      const training = trainingRecord.toObject();
+      const training = trainingRecord
       return { training };
     } else {
       throw new Error(logStr + ' failed');
@@ -80,7 +80,7 @@ export default class TrainingService {
   public async GetTrainings(teamId: string): Promise<{ trainings: ITraining[] }> {
     const logStr = 'GetTrainings';
     this.logger.silly(logStr);
-    const trainingRecords = await this.trainingModel.find({ teamId });
+    const trainingRecords = await this.trainingModel.find({ teamId }).populate('team');
 
     if (trainingRecords) {
       // @ts-ignore

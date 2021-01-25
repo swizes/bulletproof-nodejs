@@ -20,7 +20,7 @@ export default class NotificationService {
 
     if (notificationRecord) {
       // @ts-ignore
-      const notification = notificationRecord.toObject();
+      const notification = notificationRecord;
       return { notification };
     } else {
       throw new Error(logStr + ' failed');
@@ -48,7 +48,7 @@ export default class NotificationService {
 
     if (notificationRecord) {
       // @ts-ignore
-      const notification = notificationRecord.toObject();
+      const notification = notificationRecord;
       return { notification };
     } else {
       throw new Error(logStr + ' failed');
@@ -76,7 +76,7 @@ export default class NotificationService {
 
     if (notificationRecord) {
       // @ts-ignore
-      const notification = notificationRecord.toObject();
+      const notification = notificationRecord;
       return { notification };
     } else {
       throw new Error(logStr + ' failed');
@@ -87,13 +87,6 @@ export default class NotificationService {
     const logStr = 'DeleteNotifications';
     this.logger.silly(logStr);
     const notificationRecord = await this.notificationModel.deleteMany({ userId });
-
-    if (notificationRecord) {
-      // @ts-ignore
-      const notifications = notificationRecord.toObject();
-      return { notifications };
-    } else {
-      throw new Error(logStr + ' failed');
-    }
+    return { notifications: [] };
   }
 }

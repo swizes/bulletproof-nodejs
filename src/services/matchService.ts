@@ -2,13 +2,16 @@ import { Inject, Service } from 'typedi';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
 import { IDevice } from '../interfaces/IDevice';
 import { IMatch, IMatchInputDTO } from '../interfaces/IMatch';
+import { IGoal } from '../interfaces/IGoal';
 
 @Service()
 export default class MatchService {
   constructor(
     @Inject('matchModel') private matchModel: Models.MatchModel,
     @Inject('teamModel') private teamModel: Models.TeamModel,
+    @Inject('goalModel') private goalModel: Models.GoalModel,
     @Inject('logger') private logger,
+
     @EventDispatcher() private eventDispatcher: EventDispatcherInterface,
   ) {}
 
@@ -26,7 +29,7 @@ export default class MatchService {
 
     if (matchRecord) {
       // @ts-ignore
-      const match = matchRecord.toObject();
+      const match = matchRecord;
       return { match };
     } else {
       throw new Error(logStr + ' failed');
@@ -43,7 +46,7 @@ export default class MatchService {
 
     if (matchRecord) {
       // @ts-ignore
-      const match = matchRecord.toObject();
+      const match = matchRecord;
       return { match };
     } else {
       throw new Error(logStr + ' failed');
@@ -58,7 +61,7 @@ export default class MatchService {
 
     if (matchRecord) {
       // @ts-ignore
-      const match = matchRecord.toObject();
+      const match = matchRecord;
       return { match };
     } else {
       throw new Error(logStr + ' failed');
@@ -69,11 +72,46 @@ export default class MatchService {
     const logStr = 'DeleteMatch';
     this.logger.silly(logStr);
 
-    const matchRecord = await this.matchModel.findById(matchId);
+    const matchRecord = await this.matchModel
+      .findById(matchId)
+      .populate('team')
+      .populate({
+        path: 'goals',
+        populate: [
+          {
+            path: 'scorer',
+            model: 'User',
+          },
+          {
+            path: 'assist',
+            model: 'User',
+          },
+        ],
+      })
+      .populate({
+        path: 'bookings',
+        populate: {
+          path: 'player',
+          model: 'User',
+        },
+      })
+      .populate({
+        path: 'subs',
+        populate: [
+          {
+            path: 'in',
+            model: 'User',
+          },
+          {
+            path: 'out',
+            model: 'User',
+          },
+        ],
+      });
 
     if (matchRecord) {
       // @ts-ignore
-      const match = matchRecord.toObject();
+      const match = matchRecord;
       return { match };
     } else {
       throw new Error(logStr + ' failed');
@@ -84,11 +122,11 @@ export default class MatchService {
     const logStr = 'DeleteMatch';
     this.logger.silly(logStr);
 
-    const matchRecords = await this.matchModel.find({ teamId });
+    const matchRecords = await this.matchModel.find({ teamId }).populate('team');
 
     if (matchRecords) {
       // @ts-ignore
-      const matches = matchRecords.toObject();
+      const matches = matchRecords;
       return { matches };
     } else {
       throw new Error(logStr + ' failed');
@@ -104,7 +142,7 @@ export default class MatchService {
     //ToDo: Socket here
     if (matchRecord) {
       // @ts-ignore
-      const match = matchRecord.toObject();
+      const match = matchRecord;
       return { match };
     } else {
       throw new Error(logStr + ' failed');
@@ -120,7 +158,7 @@ export default class MatchService {
     //ToDo: Socket here#
     if (matchRecord) {
       // @ts-ignore
-      const match = matchRecord.toObject();
+      const match = matchRecord;
       return { match };
     } else {
       throw new Error(logStr + ' failed');
@@ -135,7 +173,7 @@ export default class MatchService {
 
     if (matchRecord) {
       // @ts-ignore
-      let match = matchRecord.toObject();
+      let match = matchRecord;
 
       for (let i = 0; i < match.squad.length; i++) {
         const item = match.squad[i];
@@ -158,7 +196,7 @@ export default class MatchService {
 
       matchRecord = await this.matchModel.findByIdAndUpdate(matchId, match, { new: true });
 
-      match = matchRecord.toObject();
+      match = matchRecord;
       //ToDo: Socket here
       return { match };
     } else {
@@ -195,9 +233,27 @@ export default class MatchService {
     //ToDo: Socket here#
     if (matchRecord) {
       // @ts-ignore
-      const match = matchRecord.toObject();
+      const match = matchRecord;
 
       return { match };
+    } else {
+      throw new Error(logStr + ' failed');
+    }
+  }
+
+  public async GetPlayerMatchGoals(matchId: string, userId: string): Promise<{ goals: IGoal[] }> {
+    const logStr = 'DeleteMatch';
+    this.logger.silly(logStr);
+
+    const goalRecords = await this.goalModel.find({
+      matchId,
+      scorer: userId,
+    });
+
+    if (goalRecords) {
+      // @ts-ignore
+      const goals = goalRecords;
+      return { goals };
     } else {
       throw new Error(logStr + ' failed');
     }

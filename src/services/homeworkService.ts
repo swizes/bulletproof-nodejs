@@ -23,7 +23,7 @@ export default class HomeworkService {
 
     if (homeworkRecord) {
       // @ts-ignore
-      const homework = homeworkRecord.toObject();
+      const homework = homeworkRecord;
       return { homework };
     } else {
       throw new Error(logStr + ' failed');
@@ -66,11 +66,11 @@ export default class HomeworkService {
     const logStr = 'GetHomework';
     this.logger.silly(logStr);
     try {
-      const homeworkRecord = await this.homeworkModel.findById(_id);
+      const homeworkRecord = await this.homeworkModel.findById(_id).populate('team');
 
       if (homeworkRecord) {
         // @ts-ignore
-        const homework = homeworkRecord.toObject();
+        const homework = homeworkRecord;
         return { homework };
       } else {
         return null;
@@ -84,11 +84,11 @@ export default class HomeworkService {
     const logStr = 'GetHomeworks';
     this.logger.silly(logStr);
     try {
-      const homeworkRecords = await this.homeworkModel.find({ teamId });
+      const homeworkRecords = await this.homeworkModel.find({ teamId }).populate('team');
 
       if (homeworkRecords) {
         // @ts-ignore
-        const homeworks = homeworkRecords.toObject();
+        const homeworks = homeworkRecords;
         return { homeworks };
       } else {
         return { homeworks: [] };
@@ -106,7 +106,7 @@ export default class HomeworkService {
 
       if (homeworkRecord) {
         // @ts-ignore
-        const homework = homeworkRecord.toObject();
+        const homework = homeworkRecord;
         return { homework };
       } else {
         return { homework: null };
@@ -144,7 +144,7 @@ export default class HomeworkService {
 
       if (homeworkRecord) {
         // @ts-ignore
-        const homework = homeworkRecord.toObject();
+        const homework = homeworkRecord;
         return { homework };
       } else {
         return { homework: null };
@@ -176,7 +176,7 @@ export default class HomeworkService {
 
       if (homeworkRecord) {
         // @ts-ignore
-        const homework = homeworkRecord.toObject();
+        const homework = homeworkRecord;
         return { homework };
       } else {
         return { homework: null };

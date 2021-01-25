@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
+import { IChat } from '../interfaces/IChat';
 
 const Chat = new mongoose.Schema(
   {
@@ -24,4 +25,4 @@ const Chat = new mongoose.Schema(
 
 Chat.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('Chat', Chat);
+export default mongoose.model<IChat & mongoose.Document>('Chat', Chat);

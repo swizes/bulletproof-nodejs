@@ -27,7 +27,7 @@ export default class TeamService {
       throw new Error('Team cannot be created');
     }
 
-    const team = teamRecord.toObject();
+    const team = teamRecord;
     return { team };
   }
 
@@ -56,7 +56,7 @@ export default class TeamService {
   public async GetTeam(teamId: string): Promise<{ team: ITeam }> {
     this.logger.silly('Getting Team');
     const teamRecord = await this.teamModel.findById(teamId);
-    const team = teamRecord.toObject();
+    const team = teamRecord;
 
     if (teamRecord) {
       return { team };
@@ -68,7 +68,7 @@ export default class TeamService {
   public async GetTeamByCode(invitationCode: string): Promise<{ team: ITeam }> {
     this.logger.silly('Getting Team');
     const teamRecord = await this.teamModel.findOne({ invitationCode });
-    const team = teamRecord.toObject();
+    const team = teamRecord;
 
     if (teamRecord) {
       return { team };
@@ -80,10 +80,9 @@ export default class TeamService {
   public async GetTeams(userId: string): Promise<{ teams: ITeam[] }> {
     this.logger.silly('Getting Team');
     const teamRecords = await this.teamModel.find({ 'members.userId': userId });
-    // @ts-ignore
-    const teams = teamRecords.toObject();
 
     if (teamRecords) {
+      const teams = teamRecords;
       return { teams };
     } else {
       throw new Error('Team does not exist');
@@ -105,7 +104,7 @@ export default class TeamService {
     if (!teamRecord) {
       throw new Error('Could not get new code. You are not owner or team does not exist');
     } else {
-      const team = teamRecord.toObject();
+      const team = teamRecord;
       return { invitationCode: team.invitationCode };
     }
   }
@@ -117,7 +116,7 @@ export default class TeamService {
     if (!teamRecord) {
       throw new Error('Could not get new code. You are not owner or team does not exist');
     } else {
-      const team = teamRecord.toObject();
+      const team = teamRecord;
       return { invitationCode: team.invitationCode };
     }
   }
@@ -126,7 +125,7 @@ export default class TeamService {
     this.logger.silly('Getting Member Item');
 
     const teamRecord = await this.teamModel.findOne(
-      { teamId, 'members.userId': userId },
+      { _id: teamId, 'members.userId': userId },
       {
         'members.$': 1,
       },
@@ -135,7 +134,7 @@ export default class TeamService {
     if (!teamRecord) {
       throw new Error('Could not get member  item. Either member does not exist or team does not exist ');
     } else {
-      const team = teamRecord.toObject();
+      const team = teamRecord;
 
       return { data: team.members[0] };
     }
@@ -165,7 +164,7 @@ export default class TeamService {
     if (!teamRecord) {
       throw new Error('Could not get members. Team does not exist ');
     } else {
-      const team = teamRecord.toObject();
+      const team = teamRecord;
 
       return { data: team.members };
     }

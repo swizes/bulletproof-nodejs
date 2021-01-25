@@ -14,13 +14,15 @@ export default class EventService {
 
   public async GetTeamEvents(teamId: string): Promise<{ events: IEvent[] }> {
     this.logger.silly('Getting Team Events');
-    const eventRecords = await this.eventModel.find({
-      teamId,
-    });
+    const eventRecords = await this.eventModel
+      .find({
+        teamId,
+      })
+      .populate({ path: 'team', select: 'name' });
 
     if (eventRecords) {
       // @ts-ignore
-      const events = eventRecords.toObject();
+      const events = eventRecords;
       return { events };
     } else {
       throw new Error('Get Team Events failed');
@@ -32,9 +34,11 @@ export default class EventService {
 
     //ToDo: Convert this to aggregate, much cleaner
     try {
-      const teams = await this.teamModel.find({
-        'members.userId': currentUserId,
-      });
+      const teams = await this.teamModel
+        .find({
+          'members.userId': currentUserId,
+        })
+        .populate({ path: 'team', select: 'name' });
 
       let events = [];
 
@@ -60,7 +64,7 @@ export default class EventService {
 
     if (eventRecords) {
       // @ts-ignore
-      const events = eventRecords.toObject();
+      const events = eventRecords;
       return { events };
     } else {
       throw new Error('Getting Upcoming Team Events failed');

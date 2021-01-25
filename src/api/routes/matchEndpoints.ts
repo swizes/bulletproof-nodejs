@@ -8,6 +8,7 @@ import updateMatch from './match/updateMatch';
 import createMatch from './match/createMatch';
 import getMatches from './match/getMatches';
 import deleteMatch from './match/deleteMatch';
+import getPlayerGoals from './match/getPlayerGoals';
 
 const route = Router();
 
@@ -17,6 +18,7 @@ export default (app: Router) => {
   addExtraTime(app, route);
   finishMatch(app, route);
   resetMatch(app, route);
+  getPlayerGoals(app, route);
   getMatch(app, route);
   updateMatch(app, route);
   deleteMatch(app, route);

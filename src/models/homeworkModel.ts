@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
+import { IHomework } from '../interfaces/IHomework';
 
 const Homework = new mongoose.Schema(
   {
@@ -76,4 +77,4 @@ Homework.virtual('team', {
 
 Homework.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('Homework', Homework);
+export default mongoose.model<IHomework & mongoose.Document>('Homework', Homework);

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
+import { IEventRating } from '../interfaces/IEventRating';
 
 const EventRating = new mongoose.Schema(
   {
@@ -49,4 +50,4 @@ const EventRating = new mongoose.Schema(
 
 EventRating.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('EventRating', EventRating);
+export default mongoose.model<IEventRating & mongoose.Document>('EventRating', EventRating);

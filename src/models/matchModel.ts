@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
+import { IMatch } from '../interfaces/IMatch';
 
 const Match = new mongoose.Schema(
   {
@@ -149,4 +150,4 @@ Match.virtual('team', {
 
 Match.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('Match', Match);
+export default mongoose.model<IMatch & mongoose.Document>('Match', Match);

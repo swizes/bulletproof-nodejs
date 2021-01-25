@@ -1,5 +1,5 @@
 export interface IEventRating {
-  _id: string;
+  _id?: string;
   rating: number;
   notes: string;
   category: string;

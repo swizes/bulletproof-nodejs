@@ -3,6 +3,7 @@ import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
 import { IGoal } from '../interfaces/IGoal';
 import { IBooking } from '../interfaces/IBooking';
+import { IOtherMatchEvent } from '../interfaces/IOtherMatchEvent';
 
 const OtherMatchEventSchema = new mongoose.Schema(
   {
@@ -38,4 +39,4 @@ const OtherMatchEventSchema = new mongoose.Schema(
 
 OtherMatchEventSchema.methods = {};
 
-export default mongoose.model<IBooking & mongoose.Document>('OtherMatchEvent', OtherMatchEventSchema);
+export default mongoose.model<IOtherMatchEvent & mongoose.Document>('OtherMatchEvent', OtherMatchEventSchema);

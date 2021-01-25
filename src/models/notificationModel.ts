@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { IFollow } from '../interfaces/IFollow';
+import { INotification } from '../interfaces/INotification';
 
 const Notification = new mongoose.Schema(
   {
@@ -44,4 +45,4 @@ const Notification = new mongoose.Schema(
 
 Notification.methods = {};
 
-export default mongoose.model<IFollow & mongoose.Document>('Notification', Notification);
+export default mongoose.model<INotification & mongoose.Document>('Notification', Notification);

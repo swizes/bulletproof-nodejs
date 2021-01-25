@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
 
 export interface IHomework {
-  _id: string;
+  _id?: string;
   title: string;
   description: string;
   creatorId: string;
