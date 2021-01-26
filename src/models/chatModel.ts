@@ -4,7 +4,7 @@ import { IChat } from '../interfaces/IChat';
 
 const Chat = new mongoose.Schema(
   {
-    members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    userIds: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     lastMessageId: { type: Schema.Types.ObjectId, ref: 'Message' },
     lastMessageDate: { type: Date },
     groupName: {

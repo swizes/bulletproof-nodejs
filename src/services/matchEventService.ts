@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
 import { IMatch } from '../interfaces/IMatch';
+import socketApi from '../loaders/socketApi';
 import Match from '../models/matchModel';
 
 @Service()
@@ -36,6 +37,7 @@ export default class MatchEventService {
         throw new Error(logStr + ' failed');
     }
 
+    socketApi.io.emit(match._id, match);
     return { match };
   }
 

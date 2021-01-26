@@ -18,9 +18,7 @@ export interface ITeam {
 export interface ITeamJoinMemberDTO {
   userId: string;
   isPlayer?: boolean;
-  selectedPos?: {
-    position: string;
-  };
+  selectedPos: string;
   selectedStyle?: string;
 }
 

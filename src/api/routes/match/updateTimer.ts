@@ -7,7 +7,7 @@ import MatchService from '../../../services/matchService';
 export default (app: Router, route: Router) => {
   const logger: Logger = Container.get('logger');
 
-  route.patch('/:matchId/timer', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
+  route.post('/:matchId/timer', middlewares.isAuth, async (req: Request, res: Response, next: NextFunction) => {
     logger.debug('Calling Update Match endpoint');
     try {
       const matchServiceInstance = Container.get(MatchService);

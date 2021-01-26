@@ -17,7 +17,7 @@ export default (app: Router, route: Router) => {
         const eventHappinessServiceInstance = Container.get(EventHappinessService);
 
         const { teamId, userId } = req.params;
-        const { physicalAvg = null, mentalAvg = null } = await eventHappinessServiceInstance.GetUserHappinessAvg(
+        const { physicalAvg, mentalAvg } = await eventHappinessServiceInstance.GetUserHappinessAvg(
           userId.toString(),
           teamId.toString(),
         );

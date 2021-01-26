@@ -12,6 +12,7 @@ export default (app: Router, route: Router) => {
     try {
       const matchServiceInstance = Container.get(MatchService);
 
+      console.log(req.body);
       const { match } = await matchServiceInstance.UpdateMatch(req.params.matchId, req.body);
 
       return res.json({ match }).status(200);

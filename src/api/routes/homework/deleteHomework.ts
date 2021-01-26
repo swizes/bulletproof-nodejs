@@ -12,13 +12,13 @@ export default (app: Router, route: Router) => {
     middlewares.isAuth,
 
     async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling Delete Homework endpoint');
+      logger.debug('Calling Delete Homework endpoint', req.params.homeworkId);
       try {
         const homeworkServiceInstance = Container.get(HomeworkService);
 
-        const { homework } = await homeworkServiceInstance.DeleteHomework(req.params.homeworkId.toString());
+        await homeworkServiceInstance.DeleteHomework(req.params.homeworkId);
 
-        return res.json({ homework }).status(200);
+        return res.json({ success: true }).status(200);
       } catch (e) {
         logger.error('🔥 error: %o', e);
         return next(e);

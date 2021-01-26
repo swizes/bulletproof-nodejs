@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
 import { IEventRating, IEventRatingDTO } from '../interfaces/IEventRating';
+import mongoose from 'mongoose';
 
 @Service()
 export default class EventRatingService {
@@ -68,10 +69,42 @@ export default class EventRatingService {
   public async GetUserRatings(userId: string, teamId: string): Promise<{ eventRatings: IEventRating[] }> {
     const logStr = 'GetUserRatings';
     this.logger.silly(logStr);
-    const eventRatingRecords = await this.eventRatingModel.find({
-      teamId,
-      userId,
-    });
+
+    const eventRatingRecords = await this.eventRatingModel.aggregate([
+      {
+        $match: {
+          teamId: new mongoose.Types.ObjectId(teamId),
+          userId: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        $group: {
+          _id: {
+            category: '$category',
+            parent: '$parent',
+          },
+          categoryAvrRating: {
+            $avg: '$rating',
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id.parent',
+          categoryRatings: {
+            $push: {
+              category: '$_id.category',
+              categoryAvg: '$categoryAvrRating',
+            },
+          },
+          parentAvg: {
+            $avg: '$categoryAvrRating',
+          },
+        },
+      },
+    ]);
+
+    console.log(eventRatingRecords);
 
     if (eventRatingRecords) {
       const eventRatings = eventRatingRecords;

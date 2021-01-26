@@ -21,11 +21,12 @@ export default (app: Router) => {
   ///:homeworkId/video
   updateHomeworkVideo(app, route);
   ///:homeworkId
+  getHomework(app, route);
+  ///:homeworkId
   updateHomework(app, route);
   ///:homeworkId
   deleteHomework(app, route);
-  ///:homeworkId
-  getHomework(app, route);
+
   ///
   postHomework(app, route);
   ///

@@ -3,6 +3,11 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from '../api';
 import config from '../config';
+
+import http from 'http';
+const socket_io = require('socket.io');
+const io = socket_io();
+
 const { errors } = require('celebrate');
 export default ({ app }: { app: express.Application }) => {
   /**
@@ -70,4 +75,26 @@ export default ({ app }: { app: express.Application }) => {
       });
     }
   });
+
+  /*
+  const server = require('http').createServer(app);
+  io.listen(server);
+  const socketApi = {
+    io: null,
+  };
+  socketApi.io = io;
+  io.on('connection', function (socket) {
+    console.log('connection');
+
+    socket.on('login', function (data) {
+      console.log('login');
+    });
+    socket.on('disconnect', function () {
+      console.log('disconnect');
+    });
+  });
+  server.io = io;
+
+   */
+  return app;
 };

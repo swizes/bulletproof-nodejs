@@ -50,7 +50,7 @@ export default class HomeworkService {
     }
   }
 
-  public async DeleteHomework(_id: string): Promise<{ homework: IHomework }> {
+  public async DeleteHomework(_id: string) {
     const logStr = 'DeleteHomework';
     this.logger.silly(logStr);
     try {
@@ -65,6 +65,7 @@ export default class HomeworkService {
   public async GetHomework(_id: string): Promise<{ homework: IHomework }> {
     const logStr = 'GetHomework';
     this.logger.silly(logStr);
+
     try {
       const homeworkRecord = await this.homeworkModel.findById(_id).populate('team');
 

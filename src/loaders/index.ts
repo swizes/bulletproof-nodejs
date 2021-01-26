@@ -1,4 +1,5 @@
 import expressLoader from './express';
+import socketIoLoader from './socket-io';
 import dependencyInjectorLoader from './dependencyInjector';
 import mongooseLoader from './mongoose';
 import jobsLoader from './jobs';
@@ -6,6 +7,7 @@ import Logger from './logger';
 //We have to import at least all the events once so they can be triggered
 import './events';
 import notificationModel from '../models/notificationModel';
+import exp from 'constants';
 
 export default async ({ expressApp }) => {
   const mongoConnection = await mongooseLoader();
@@ -136,6 +138,9 @@ export default async ({ expressApp }) => {
   //await jobsLoader({ agenda });
   //Logger.info('✌️ Jobs loaded');
 
-  await expressLoader({ app: expressApp });
+  expressApp = await expressLoader({ app: expressApp });
   Logger.info('✌️ Express loaded');
+  expressApp = await socketIoLoader({ app: expressApp });
+  Logger.info('✌️ Socket.IO loaded');
+  return expressApp;
 };

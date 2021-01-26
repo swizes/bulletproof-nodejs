@@ -1,10 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDispatcher';
-import { IFollow } from '../interfaces/IFollow';
-import { IEvent } from '../interfaces/IEvent';
 import { IEventHappiness, IEventHappinessDTO } from '../interfaces/IEventHappiness';
-import event from '../models/eventModel';
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 @Service()
 export default class EventHappinessService {

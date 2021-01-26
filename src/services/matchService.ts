@@ -3,6 +3,7 @@ import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDi
 import { IDevice } from '../interfaces/IDevice';
 import { IMatch, IMatchInputDTO } from '../interfaces/IMatch';
 import { IGoal } from '../interfaces/IGoal';
+import socketApi from '../loaders/socketApi';
 
 @Service()
 export default class MatchService {
@@ -119,7 +120,7 @@ export default class MatchService {
   }
 
   public async GetMatches(teamId: string): Promise<{ matches: IMatch[] }> {
-    const logStr = 'DeleteMatch';
+    const logStr = 'GetMatches';
     this.logger.silly(logStr);
 
     const matchRecords = await this.matchModel.find({ teamId }).populate('team');
@@ -134,15 +135,15 @@ export default class MatchService {
   }
 
   public async UpdateTimer(matchId: string, timer: any): Promise<{ match: IMatch }> {
-    const logStr = 'DeleteMatch';
+    const logStr = 'UpdateTimer';
     this.logger.silly(logStr);
 
     const matchRecord = await this.matchModel.findByIdAndUpdate(matchId, { timer }, { new: true });
 
-    //ToDo: Socket here
     if (matchRecord) {
       // @ts-ignore
       const match = matchRecord;
+      socketApi.io.emit(match._id, match);
       return { match };
     } else {
       throw new Error(logStr + ' failed');
@@ -155,10 +156,10 @@ export default class MatchService {
 
     const matchRecord = await this.matchModel.findByIdAndUpdate(matchId, { $inc: { extraTime } }, { new: true });
 
-    //ToDo: Socket here#
     if (matchRecord) {
       // @ts-ignore
       const match = matchRecord;
+      socketApi.io.emit(match._id, match);
       return { match };
     } else {
       throw new Error(logStr + ' failed');
@@ -197,7 +198,7 @@ export default class MatchService {
       matchRecord = await this.matchModel.findByIdAndUpdate(matchId, match, { new: true });
 
       match = matchRecord;
-      //ToDo: Socket here
+      socketApi.io.emit(match._id, match);
       return { match };
     } else {
       throw new Error(logStr + ' failed');
@@ -230,11 +231,10 @@ export default class MatchService {
 
      */
 
-    //ToDo: Socket here#
     if (matchRecord) {
       // @ts-ignore
       const match = matchRecord;
-
+      socketApi.io.emit(match._id, match);
       return { match };
     } else {
       throw new Error(logStr + ' failed');

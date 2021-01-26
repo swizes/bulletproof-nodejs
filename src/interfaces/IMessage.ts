@@ -23,4 +23,5 @@ export interface IMessage {
     },
   ];
   createdAt: string;
+  user?: any;
 }

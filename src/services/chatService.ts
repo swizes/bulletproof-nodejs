@@ -3,6 +3,7 @@ import { EventDispatcher, EventDispatcherInterface } from '../decorators/eventDi
 import { IChat } from '../interfaces/IChat';
 import mongoose from 'mongoose';
 import { IMessage } from '../interfaces/IMessage';
+import socketApi from '../loaders/socketApi';
 
 @Service()
 export default class ChatService {
@@ -16,14 +17,19 @@ export default class ChatService {
   public async GetUserChat(requesterId: string, recipientId: string): Promise<{ chat: IChat }> {
     const logStr = 'GetChat';
     this.logger.silly(logStr);
-    const chatRecord = await this.chatModel.findOne({
-      userIds: {
-        $all: [
-          { $elemMatch: { $eq: mongoose.Types.ObjectId(requesterId.toString()) } },
-          { $elemMatch: { $eq: mongoose.Types.ObjectId(recipientId.toString()) } },
-        ],
+    const chatRecord = await this.chatModel.findOneAndUpdate(
+      {
+        userIds: {
+          $all: [
+            { $elemMatch: { $eq: mongoose.Types.ObjectId(requesterId.toString()) } },
+            { $elemMatch: { $eq: mongoose.Types.ObjectId(recipientId.toString()) } },
+          ],
+        },
+        chatType: '1v1',
       },
-    });
+      { userIds: [requesterId, recipientId], chatType: '1v1' },
+      { new: true, upsert: true },
+    );
 
     if (chatRecord) {
       // @ts-ignore
@@ -41,14 +47,11 @@ export default class ChatService {
       .find({ userIds: { $elemMatch: { $eq: mongoose.Types.ObjectId(userId.toString()) } } })
       .populate({
         path: 'lastMessageId',
-        populate: {
-          path: 'user',
-        },
       });
 
     if (chatRecords) {
       // @ts-ignore
-      const chats = chatRecords.toObject();
+      const chats = chatRecords;
       return { chats };
     } else {
       throw new Error(logStr + ' failed');
@@ -59,14 +62,11 @@ export default class ChatService {
   public async GetMessages(chatId: string): Promise<{ messages: IMessage[] }> {
     const logStr = 'GetMessages';
     this.logger.silly(logStr);
-    const messageRecords = await this.messageModel
-      .find({ chatId })
-
-      .sort({ createdAt: -1 });
+    const messageRecords = await this.messageModel.find({ chatId }).populate('user').sort({ createdAt: -1 });
 
     if (messageRecords) {
       // @ts-ignore
-      const messages = messageRecords.toObject();
+      const messages = messageRecords;
       return { messages };
     } else {
       throw new Error(logStr + ' failed');
@@ -90,11 +90,9 @@ export default class ChatService {
         lastMessageDate: message.createdAt,
       });
 
-      /*
-        newMessage = await newMessage.populate('user', { firstName: 1,lastName:1, _id: 1 }).execPopulate()
-        newMessage.user.name = newMessage.user.fullName
-        socketApi.io.emit(chatId,newMessage)
-       */
+      const newMessage = await this.messageModel.findById(message._id).populate('user');
+      newMessage.user.name = newMessage.user.fullName;
+      socketApi.io.emit(chatId, newMessage);
 
       return { message };
     } else {

@@ -182,15 +182,9 @@ export default class TeamService {
   }
 
   public async JoinTeam(teamId: string, teamJoinMemberDTO: ITeamJoinMemberDTO): Promise<{ team: ITeam }> {
-    const {
-      userId,
-      isPlayer,
-      selectedPos = {
-        position: null,
-      },
-      selectedStyle,
-    } = teamJoinMemberDTO;
+    const { userId, isPlayer, selectedPos, selectedStyle } = teamJoinMemberDTO;
 
+    console.log(isPlayer, selectedPos, selectedStyle);
     const teamRecord = await this.teamModel.findByIdAndUpdate(
       teamId,
       {
@@ -198,7 +192,7 @@ export default class TeamService {
           members: {
             userId,
             mainRole: isPlayer ? 1 : 0,
-            position: isPlayer ? selectedPos.position : null,
+            position: isPlayer ? selectedPos : null,
             style: isPlayer ? selectedStyle : null,
           },
         },

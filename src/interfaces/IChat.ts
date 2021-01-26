@@ -1,6 +1,5 @@
-
 export interface IChat {
-  members: string[];
+  userIds: string[];
   lastMessageId: string;
   lastMessageDate: string;
   groupName: string;

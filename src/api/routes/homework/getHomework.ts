@@ -12,11 +12,11 @@ export default (app: Router, route: Router) => {
     middlewares.isAuth,
 
     async (req: Request, res: Response, next: NextFunction) => {
-      logger.debug('Calling Get Homework endpoint');
+      logger.debug('Calling Get Homework endpoint:', req.params.homeworkId);
       try {
         const homeworkServiceInstance = Container.get(HomeworkService);
 
-        const { homework } = await homeworkServiceInstance.GetHomework(req.params.homeworkId.toString());
+        const { homework } = await homeworkServiceInstance.GetHomework(req.params.homeworkId);
 
         return res.json({ homework }).status(200);
       } catch (e) {
